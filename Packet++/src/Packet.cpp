@@ -22,7 +22,6 @@
 
 namespace pcpp
 {
-
 	Packet::Packet(size_t maxPacketLen, LinkLayerType linkType)
 	    : m_RawPacket(nullptr), m_FirstLayer(nullptr), m_LastLayer(nullptr), m_MaxPacketLen(maxPacketLen),
 	      m_FreeRawPacket(true), m_CanReallocateData(true)
@@ -842,5 +841,4 @@ namespace pcpp
 			curLayer = curLayer->getNextLayer();
 		}
 	}
-
 }  // namespace pcpp

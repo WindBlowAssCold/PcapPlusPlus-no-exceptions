@@ -7,7 +7,6 @@
 
 namespace pcpp
 {
-
 	// ---------------------- Class STPLayer ----------------------
 	MacAddress StpLayer::StpMulticastDstMAC("01:80:C2:00:00:00");
 	MacAddress StpLayer::StpUplinkFastMulticastDstMAC("01:00:0C:CD:CD:CD");
@@ -344,5 +343,4 @@ namespace pcpp
 			return (msti_conf_msg*)(m_Data + sizeof(mstp_conf_bpdu));
 		return nullptr;
 	}
-
 }  // namespace pcpp

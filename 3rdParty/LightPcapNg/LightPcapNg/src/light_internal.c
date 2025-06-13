@@ -30,14 +30,15 @@
 #include <stdlib.h>
 #include <string.h>
 
-struct _light_option *__copy_option(const struct _light_option *option)
+struct _light_option* __copy_option(const struct _light_option* option)
 {
-	if (option == NULL) {
+	if (option == NULL)
+	{
 		return NULL;
 	}
 
 	size_t current_size = 0;
-	struct _light_option *copy = calloc(1, sizeof(struct _light_option));
+	struct _light_option* copy = calloc(1, sizeof(struct _light_option));
 
 	PADD32(option->option_length, &current_size);
 
@@ -51,14 +52,16 @@ struct _light_option *__copy_option(const struct _light_option *option)
 	return copy;
 }
 
-struct _light_pcapng *__copy_block(const struct _light_pcapng *pcapng, const light_boolean recursive)
+struct _light_pcapng* __copy_block(const struct _light_pcapng* pcapng, const light_boolean recursive)
 {
-	if (pcapng == NULL) {
+	if (pcapng == NULL)
+	{
 		return NULL;
 	}
 
-	size_t body_length = pcapng->block_total_length - 2 * sizeof(pcapng->block_total_length) - sizeof(pcapng->block_type);
-	struct _light_pcapng *pcopy = calloc(1, sizeof(struct _light_pcapng));
+	size_t body_length =
+	    pcapng->block_total_length - 2 * sizeof(pcapng->block_total_length) - sizeof(pcapng->block_type);
+	struct _light_pcapng* pcopy = calloc(1, sizeof(struct _light_pcapng));
 	size_t option_length = 0;
 
 	pcopy->block_type = pcapng->block_type;
@@ -70,21 +73,24 @@ struct _light_pcapng *__copy_block(const struct _light_pcapng *pcapng, const lig
 	pcopy->block_body = calloc(body_length, 1);
 	memcpy(pcopy->block_body, pcapng->block_body, body_length);
 
-	if (recursive == LIGHT_TRUE) {
+	if (recursive == LIGHT_TRUE)
+	{
 		pcopy->next_block = __copy_block(pcapng->next_block, recursive);
 	}
-	else {
+	else
+	{
 		pcopy->next_block = NULL;
 	}
 
 	return pcopy;
 }
 
-size_t __get_option_total_size(const struct _light_option *option)
+size_t __get_option_total_size(const struct _light_option* option)
 {
 	size_t size = 0;
 
-	while (option != NULL) {
+	while (option != NULL)
+	{
 		uint16_t actual_length;
 		PADD32(option->option_length, &actual_length);
 		size += 4 + actual_length;
@@ -94,16 +100,17 @@ size_t __get_option_total_size(const struct _light_option *option)
 	return size;
 }
 
-uint32_t *__get_option_size(const struct _light_option *option, size_t *size)
+uint32_t* __get_option_size(const struct _light_option* option, size_t* size)
 {
-	if (option == NULL) {
+	if (option == NULL)
+	{
 		*size = 0;
 		return NULL;
 	}
 
 	size_t next_size;
-	uint32_t *next_option = __get_option_size(option->next_option, &next_size);
-	uint32_t *current_mem;
+	uint32_t* next_option = __get_option_size(option->next_option, &next_size);
+	uint32_t* current_mem;
 	size_t current_size = 0;
 
 	PADD32(option->option_length, &current_size);
@@ -121,13 +128,16 @@ uint32_t *__get_option_size(const struct _light_option *option, size_t *size)
 	return current_mem;
 }
 
-light_boolean __is_section_header(const struct _light_pcapng * section)
+light_boolean __is_section_header(const struct _light_pcapng* section)
 {
-	if (section != NULL) {
-		if (section->block_type != LIGHT_SECTION_HEADER_BLOCK) {
+	if (section != NULL)
+	{
+		if (section->block_type != LIGHT_SECTION_HEADER_BLOCK)
+		{
 			return LIGHT_FALSE;
 		}
-		else {
+		else
+		{
 			return LIGHT_TRUE;
 		}
 	}
@@ -135,22 +145,26 @@ light_boolean __is_section_header(const struct _light_pcapng * section)
 	return LIGHT_FALSE;
 }
 
-int __validate_section(struct _light_pcapng *section)
+int __validate_section(struct _light_pcapng* section)
 {
-	if (__is_section_header(section) != LIGHT_TRUE) {
+	if (__is_section_header(section) != LIGHT_TRUE)
+	{
 		return LIGHT_INVALID_SECTION;
 	}
 
-	struct _light_section_header *shb = (struct _light_section_header *)section->block_body;
+	struct _light_section_header* shb = (struct _light_section_header*)section->block_body;
 	uint64_t size = section->block_total_length;
-	struct _light_pcapng *next_block = section->next_block;
+	struct _light_pcapng* next_block = section->next_block;
 
-	while (next_block != NULL) {
-		if (__is_section_header(next_block) == LIGHT_TRUE) {
+	while (next_block != NULL)
+	{
+		if (__is_section_header(next_block) == LIGHT_TRUE)
+		{
 			shb->section_length = size;
 			return __validate_section(next_block);
 		}
-		else {
+		else
+		{
 			size += next_block->block_total_length;
 			next_block = next_block->next_block;
 		}

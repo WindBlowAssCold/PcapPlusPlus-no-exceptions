@@ -299,5 +299,4 @@ namespace pcpp
 			return false;
 		}
 	}
-
 }  // namespace pcpp

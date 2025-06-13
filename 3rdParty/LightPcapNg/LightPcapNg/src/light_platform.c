@@ -29,17 +29,16 @@
 #include <stdio.h>
 #include <string.h>
 
-//Visual studio gives us min + max for free, but other OS does not....
+// Visual studio gives us min + max for free, but other OS does not....
 #if !defined(_MSC_VER) || (!defined(max) && !defined(min))
-#define max(a,b) (((a) > (b)) ? (a) : (b))
-#define min(a,b) (((a) < (b)) ? (a) : (b))
-#define UNDEF_MAX_MIN
+#	define max(a, b) (((a) > (b)) ? (a) : (b))
+#	define min(a, b) (((a) < (b)) ? (a) : (b))
+#	define UNDEF_MAX_MIN
 #endif
-
 
 #ifdef UNIVERSAL
 
-light_file light_open_decompression(const char *file_name, const __read_mode_t mode)
+light_file light_open_decompression(const char* file_name, const __read_mode_t mode)
 {
 	light_file fd = calloc(1, sizeof(light_file_t));
 	fd->file = INVALID_FILE;
@@ -47,12 +46,12 @@ light_file light_open_decompression(const char *file_name, const __read_mode_t m
 
 	switch (mode)
 	{
-		case LIGHT_OREAD:
-			fd->file = fopen(file_name, "rb");
-			break;
+	case LIGHT_OREAD:
+		fd->file = fopen(file_name, "rb");
+		break;
 
-		default:
-			break;
+	default:
+		break;
 	}
 
 	if (fd->file)
@@ -65,14 +64,15 @@ light_file light_open_decompression(const char *file_name, const __read_mode_t m
 	}
 }
 
-light_file light_open(const char *file_name, const __read_mode_t mode)
+light_file light_open(const char* file_name, const __read_mode_t mode)
 {
-	light_file fd = calloc(1,sizeof(light_file_t));
+	light_file fd = calloc(1, sizeof(light_file_t));
 	fd->file = INVALID_FILE;
 	fd->compression_context = NULL;
 	fd->decompression_context = NULL;
 
-	switch (mode) {
+	switch (mode)
+	{
 	case LIGHT_OREAD:
 	{
 		if (light_is_compressed_file(file_name))
@@ -100,7 +100,7 @@ light_file light_open(const char *file_name, const __read_mode_t mode)
 	}
 }
 
-light_file light_open_compression(const char *file_name, const __read_mode_t mode, int compression_level)
+light_file light_open_compression(const char* file_name, const __read_mode_t mode, int compression_level)
 {
 	light_file fd = calloc(1, sizeof(light_file_t));
 	fd->file = INVALID_FILE;
@@ -113,16 +113,16 @@ light_file light_open_compression(const char *file_name, const __read_mode_t mod
 
 	switch (mode)
 	{
-		case LIGHT_OWRITE:
-			fd->file = fopen(file_name, "wb");
-			break;
-			//TODO Not so sure about allowing appends... I think you can get away with this in Zstd
-			//but i dont know about other compression algorithms!
-		/*case LIGHT_OAPPEND:
-			fd->file = fopen(file_name, "ab");
-			break;*/
-		default:
-			break;
+	case LIGHT_OWRITE:
+		fd->file = fopen(file_name, "wb");
+		break;
+		// TODO Not so sure about allowing appends... I think you can get away with this in Zstd
+		// but i dont know about other compression algorithms!
+	/*case LIGHT_OAPPEND:
+		fd->file = fopen(file_name, "ab");
+		break;*/
+	default:
+		break;
 	}
 
 	if (fd->file)
@@ -135,14 +135,12 @@ light_file light_open_compression(const char *file_name, const __read_mode_t mod
 	}
 }
 
-
-
-size_t light_read(light_file fd, void *buf, size_t count)
+size_t light_read(light_file fd, void* buf, size_t count)
 {
 	if (fd->decompression_context == NULL)
 	{
 		size_t bytes_read = fread(buf, 1, count, fd->file);
-		return  bytes_read != count ? -1 : bytes_read;
+		return bytes_read != count ? -1 : bytes_read;
 	}
 	else
 	{
@@ -150,12 +148,12 @@ size_t light_read(light_file fd, void *buf, size_t count)
 	}
 }
 
-size_t light_write(light_file fd, const void *buf, size_t count)
+size_t light_write(light_file fd, const void* buf, size_t count)
 {
 	if (fd->compression_context == NULL)
 	{
 		size_t bytes_written = fwrite(buf, 1, count, fd->file);
-		return  bytes_written != count ? -1 : bytes_written;
+		return bytes_written != count ? -1 : bytes_written;
 	}
 	else
 	{
@@ -207,12 +205,12 @@ light_file_pos_t light_set_pos(light_file fd, light_file_pos_t pos)
 
 #else
 
-#error UNIMPLEMENRTED
+#	error UNIMPLEMENRTED
 
 #endif
 
 #if defined(UNDEF_MAX_MIN)
-#undef max
-#undef min
-#undef UNDEF_MAX_MIN
+#	undef max
+#	undef min
+#	undef UNDEF_MAX_MIN
 #endif

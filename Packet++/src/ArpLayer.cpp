@@ -112,5 +112,4 @@ namespace pcpp
 			return "ARP Layer, unknown opcode (" + std::to_string(getOpcode()) + ")";
 		}
 	}
-
 }  // namespace pcpp

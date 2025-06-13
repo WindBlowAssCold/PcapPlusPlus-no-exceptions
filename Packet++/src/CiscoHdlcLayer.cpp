@@ -8,7 +8,6 @@
 
 namespace pcpp
 {
-
 // Protocol types for Cisco HDLC
 #define CISCO_HDLC_TYPE_IP 0x0800
 #define CISCO_HDLC_TYPE_IPV6 0x86DD
@@ -104,7 +103,8 @@ namespace pcpp
 	{
 		if (address == AddressType::Unknown)
 		{
-			throw std::invalid_argument("Cannot set the address to Address::Unknown");
+			return;
+			// throw std::invalid_argument("Cannot set the address to Address::Unknown");
 		}
 
 		setAddressValue(static_cast<uint8_t>(address));

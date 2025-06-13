@@ -186,5 +186,4 @@ namespace pcpp
 	{
 		return getSll2Header()->link_layer_addr;
 	}
-
 }  // namespace pcpp

@@ -19,7 +19,6 @@
 
 namespace pcpp
 {
-
 	ProtocolType GreLayer::getGREVersion(uint8_t* greData, size_t greDataLen)
 	{
 		if (greDataLen < sizeof(gre_basic_header))
@@ -610,5 +609,4 @@ namespace pcpp
 		else
 			header->protocol = 0;
 	}
-
 }  // namespace pcpp

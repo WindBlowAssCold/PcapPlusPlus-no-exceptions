@@ -11,7 +11,6 @@
 
 namespace pcpp
 {
-
 	/// PPPoELayer
 	/// ~~~~~~~~~~
 
@@ -442,5 +441,4 @@ namespace pcpp
 			return std::string("Unknown PPPoE code");
 		}
 	}
-
 }  // namespace pcpp

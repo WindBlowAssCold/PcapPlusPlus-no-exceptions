@@ -8,7 +8,6 @@
 
 namespace pcpp
 {
-
 #define SSH_LAYER_BASE_STRING "SSH Layer"
 
 	// ----------------
@@ -255,5 +254,4 @@ namespace pcpp
 	{
 		return std::string(SSH_LAYER_BASE_STRING) + ", " + "Encrypted Message";
 	}
-
 }  // namespace pcpp

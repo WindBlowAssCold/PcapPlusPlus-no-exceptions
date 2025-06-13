@@ -7,7 +7,6 @@ namespace pcpp
 {
 	namespace internal
 	{
-
 		PcapHandle::PcapHandle(pcap_t* pcapDescriptor) noexcept : m_PcapDescriptor(pcapDescriptor)
 		{}
 
@@ -159,5 +158,4 @@ namespace pcpp
 	{
 		return std::string(pcap_lib_version());
 	}
-
 }  // namespace pcpp

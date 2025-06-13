@@ -29,11 +29,12 @@
 #include <stdlib.h>
 #include <string.h>
 
-static void __parse_mem_inplace(struct _light_pcapng_mem *head, uint32_t *memory, size_t size, int is_owner)
+static void __parse_mem_inplace(struct _light_pcapng_mem* head, uint32_t* memory, size_t size, int is_owner)
 {
 	uint32_t tmp_block_len;
 	size_t tmp_size = size;
-	uint32_t *iterator = memory;;
+	uint32_t* iterator = memory;
+	;
 	size_t i;
 
 	head->mem = memory;
@@ -41,32 +42,35 @@ static void __parse_mem_inplace(struct _light_pcapng_mem *head, uint32_t *memory
 	head->owner = is_owner;
 
 	head->block_count = 0;
-	while (tmp_size > 0) {
+	while (tmp_size > 0)
+	{
 		head->block_count++;
 		tmp_block_len = iterator[1];
 		tmp_size -= tmp_block_len;
 		iterator += tmp_block_len / sizeof(iterator[0]);
 	}
 
-	head->mem_blocks = calloc(head->block_count, sizeof(uint32_t *));
+	head->mem_blocks = calloc(head->block_count, sizeof(uint32_t*));
 	iterator = memory;
-	for (i = 0; i < head->block_count; ++i) {
+	for (i = 0; i < head->block_count; ++i)
+	{
 		head->mem_blocks[i] = iterator;
 		iterator += iterator[1] / sizeof(iterator[0]);
 	}
 }
 
-struct _light_pcapng_mem *light_no_copy_from_memory(uint32_t *memory, size_t size, int is_owner)
+struct _light_pcapng_mem* light_no_copy_from_memory(uint32_t* memory, size_t size, int is_owner)
 {
-	struct _light_pcapng_mem *head = NULL;
+	struct _light_pcapng_mem* head = NULL;
 	head = calloc(1, sizeof(struct _light_pcapng_mem));
 	__parse_mem_inplace(head, memory, size, is_owner);
 	return head;
 }
 
-void light_pcapng_mem_release(struct _light_pcapng_mem *pcapng)
+void light_pcapng_mem_release(struct _light_pcapng_mem* pcapng)
 {
-	if (pcapng != NULL) {
+	if (pcapng != NULL)
+	{
 		free(pcapng->mem_blocks);
 
 		if (pcapng->owner != 0)

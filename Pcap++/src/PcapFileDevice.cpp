@@ -1029,5 +1029,4 @@ namespace pcpp
 	{
 		return m_BpfWrapper.setFilter(filterAsString);
 	}
-
 }  // namespace pcpp

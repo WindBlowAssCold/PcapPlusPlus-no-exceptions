@@ -32,15 +32,14 @@
 #include <stdlib.h>
 #include <string.h>
 
-
 struct _light_pcapng_t
 {
 	light_pcapng pcapng;
-	light_pcapng_file_info *file_info;
+	light_pcapng_file_info* file_info;
 	light_file file;
 };
 
-static light_pcapng_file_info *__create_file_info(light_pcapng pcapng_head)
+static light_pcapng_file_info* __create_file_info(light_pcapng pcapng_head)
 {
 	uint32_t type = LIGHT_UNKNOWN_DATA_BLOCK;
 
@@ -54,7 +53,7 @@ static light_pcapng_file_info *__create_file_info(light_pcapng pcapng_head)
 	if (type != LIGHT_SECTION_HEADER_BLOCK)
 		return NULL;
 
-	light_pcapng_file_info *file_info = calloc(1, sizeof(light_pcapng_file_info));
+	light_pcapng_file_info* file_info = calloc(1, sizeof(light_pcapng_file_info));
 
 	struct _light_section_header* section_header;
 
@@ -66,7 +65,7 @@ static light_pcapng_file_info *__create_file_info(light_pcapng pcapng_head)
 	if (opt != NULL)
 	{
 		file_info->hardware_desc_size = light_get_option_length(opt);
-		file_info->hardware_desc = calloc(file_info->hardware_desc_size+1, sizeof(char));
+		file_info->hardware_desc = calloc(file_info->hardware_desc_size + 1, sizeof(char));
 		memcpy(file_info->hardware_desc, (char*)light_get_option_data(opt), file_info->hardware_desc_size);
 		file_info->hardware_desc[file_info->hardware_desc_size] = '\0';
 	}
@@ -80,7 +79,7 @@ static light_pcapng_file_info *__create_file_info(light_pcapng pcapng_head)
 	if (opt != NULL)
 	{
 		file_info->os_desc_size = light_get_option_length(opt);
-		file_info->os_desc = calloc(file_info->os_desc_size+1, sizeof(char));
+		file_info->os_desc = calloc(file_info->os_desc_size + 1, sizeof(char));
 		memcpy(file_info->os_desc, (char*)light_get_option_data(opt), file_info->os_desc_size);
 		file_info->os_desc[file_info->os_desc_size] = '\0';
 	}
@@ -94,7 +93,7 @@ static light_pcapng_file_info *__create_file_info(light_pcapng pcapng_head)
 	if (opt != NULL)
 	{
 		file_info->user_app_desc_size = light_get_option_length(opt);
-		file_info->user_app_desc = calloc(file_info->user_app_desc_size+1, sizeof(char));
+		file_info->user_app_desc = calloc(file_info->user_app_desc_size + 1, sizeof(char));
 		memcpy(file_info->user_app_desc, (char*)light_get_option_data(opt), file_info->user_app_desc_size);
 		file_info->user_app_desc[file_info->user_app_desc_size] = '\0';
 	}
@@ -108,7 +107,7 @@ static light_pcapng_file_info *__create_file_info(light_pcapng pcapng_head)
 	if (opt != NULL)
 	{
 		file_info->file_comment_size = light_get_option_length(opt);
-		file_info->file_comment = calloc(file_info->file_comment_size+1, sizeof(char));
+		file_info->file_comment = calloc(file_info->file_comment_size + 1, sizeof(char));
 		memcpy(file_info->file_comment, (char*)light_get_option_data(opt), file_info->file_comment_size);
 		file_info->file_comment[file_info->file_comment_size] = '\0';
 	}
@@ -159,7 +158,7 @@ static void __append_interface_block_to_file_info(const light_pcapng interface_b
 		if (*raw_ts_data < 128)
 			ticks_per_sec = int_pow(10, (*raw_ts_data));
 		else
-			ticks_per_sec = int_pow(2, ((*raw_ts_data)-128));
+			ticks_per_sec = int_pow(2, ((*raw_ts_data) - 128));
 	}
 	info->timestamp_ticks_per_second[info->interface_block_count] = ticks_per_sec;
 
@@ -180,24 +179,24 @@ static light_boolean __is_open_for_write(const struct _light_pcapng_t* pcapng)
 // such timestamps (> 18446744073) refer to year (> 2554), so we can allow ourselves not to support them for now
 static const uint64_t MAXIMUM_PACKET_SECONDS_VALUE = UINT64_MAX / 1000000000;
 
-light_pcapng_t *light_pcapng_open_read(const char* file_path, light_boolean read_all_interfaces)
+light_pcapng_t* light_pcapng_open_read(const char* file_path, light_boolean read_all_interfaces)
 {
 	DCHECK_NULLP(file_path, return NULL);
 
-	light_pcapng_t *pcapng = calloc(1, sizeof(struct _light_pcapng_t));
+	light_pcapng_t* pcapng = calloc(1, sizeof(struct _light_pcapng_t));
 	pcapng->file = light_open(file_path, LIGHT_OREAD);
 	DCHECK_ASSERT_EXP(pcapng->file != NULL, "could not open file", return NULL);
 
-	//The first thing inside an NG capture is the section header block
-	//When the file is opened we need to go ahead and read that out
-	light_read_record(pcapng->file,&pcapng->pcapng);
-	//Prase stuff out of the section header
+	// The first thing inside an NG capture is the section header block
+	// When the file is opened we need to go ahead and read that out
+	light_read_record(pcapng->file, &pcapng->pcapng);
+	// Prase stuff out of the section header
 	pcapng->file_info = __create_file_info(pcapng->pcapng);
 
-	//If they requested to read all interfaces we must fast forward through file and find them all up front
+	// If they requested to read all interfaces we must fast forward through file and find them all up front
 	if (read_all_interfaces)
 	{
-		//Bookmark our current location
+		// Bookmark our current location
 		light_file_pos_t currentPos = light_get_pos(pcapng->file);
 		while (pcapng->pcapng != NULL)
 		{
@@ -207,13 +206,13 @@ light_pcapng_t *light_pcapng_open_read(const char* file_path, light_boolean read
 			if (type == LIGHT_INTERFACE_BLOCK)
 				__append_interface_block_to_file_info(pcapng->pcapng, pcapng->file_info);
 		}
-		//Should be at and of file now, if not something broke!!!
+		// Should be at and of file now, if not something broke!!!
 		if (!light_eof(pcapng->file))
 		{
 			light_pcapng_release(pcapng->pcapng);
 			return NULL;
 		}
-		//Ok got to end of file so reset back to bookmark
+		// Ok got to end of file so reset back to bookmark
 		light_set_pos(pcapng->file, currentPos);
 	}
 
@@ -223,12 +222,12 @@ light_pcapng_t *light_pcapng_open_read(const char* file_path, light_boolean read
 	return pcapng;
 }
 
-light_pcapng_t *light_pcapng_open_write(const char* file_path, light_pcapng_file_info *file_info, int compression_level)
+light_pcapng_t* light_pcapng_open_write(const char* file_path, light_pcapng_file_info* file_info, int compression_level)
 {
 	DCHECK_NULLP(file_info, return NULL);
 	DCHECK_NULLP(file_path, return NULL);
 
-	light_pcapng_t *pcapng = calloc(1, sizeof(struct _light_pcapng_t));
+	light_pcapng_t* pcapng = calloc(1, sizeof(struct _light_pcapng_t));
 
 	pcapng->file = light_open_compression(file_path, LIGHT_OWRITE, compression_level);
 	pcapng->file_info = file_info;
@@ -242,17 +241,20 @@ light_pcapng_t *light_pcapng_open_write(const char* file_path, light_pcapng_file
 	section_header.major_version = file_info->major_version;
 	section_header.minor_version = file_info->minor_version;
 	section_header.section_length = 0xFFFFFFFFFFFFFFFFULL;
-	light_pcapng blocks_to_write = light_alloc_block(LIGHT_SECTION_HEADER_BLOCK, (const uint32_t*)&section_header, sizeof(section_header)+3*sizeof(uint32_t));
+	light_pcapng blocks_to_write = light_alloc_block(LIGHT_SECTION_HEADER_BLOCK, (const uint32_t*)&section_header,
+	                                                 sizeof(section_header) + 3 * sizeof(uint32_t));
 
 	if (file_info->file_comment_size > 0)
 	{
-		light_option new_opt = light_create_option(LIGHT_OPTION_COMMENT, file_info->file_comment_size, file_info->file_comment);
+		light_option new_opt =
+		    light_create_option(LIGHT_OPTION_COMMENT, file_info->file_comment_size, file_info->file_comment);
 		light_add_option(blocks_to_write, blocks_to_write, new_opt, LIGHT_FALSE);
 	}
 
 	if (file_info->hardware_desc_size > 0)
 	{
-		light_option new_opt = light_create_option(LIGHT_OPTION_SHB_HARDWARE, file_info->hardware_desc_size, file_info->hardware_desc);
+		light_option new_opt =
+		    light_create_option(LIGHT_OPTION_SHB_HARDWARE, file_info->hardware_desc_size, file_info->hardware_desc);
 		light_add_option(blocks_to_write, blocks_to_write, new_opt, LIGHT_FALSE);
 	}
 
@@ -264,7 +266,8 @@ light_pcapng_t *light_pcapng_open_write(const char* file_path, light_pcapng_file
 
 	if (file_info->user_app_desc_size > 0)
 	{
-		light_option new_opt = light_create_option(LIGHT_OPTION_SHB_USERAPPL, file_info->user_app_desc_size, file_info->user_app_desc);
+		light_option new_opt =
+		    light_create_option(LIGHT_OPTION_SHB_USERAPPL, file_info->user_app_desc_size, file_info->user_app_desc);
 		light_add_option(blocks_to_write, blocks_to_write, new_opt, LIGHT_FALSE);
 	}
 
@@ -277,24 +280,25 @@ light_pcapng_t *light_pcapng_open_write(const char* file_path, light_pcapng_file
 		interface_block.reserved = 0;
 		interface_block.snapshot_length = 0;
 
-		light_pcapng iface_block_pcapng = light_alloc_block(LIGHT_INTERFACE_BLOCK, (const uint32_t*)&interface_block, sizeof(struct _light_interface_description_block)+3*sizeof(uint32_t));
+		light_pcapng iface_block_pcapng =
+		    light_alloc_block(LIGHT_INTERFACE_BLOCK, (const uint32_t*)&interface_block,
+		                      sizeof(struct _light_interface_description_block) + 3 * sizeof(uint32_t));
 		light_add_block(next_block, iface_block_pcapng);
 		next_block = iface_block_pcapng;
 	}
 
 	light_pcapng_to_file_stream(blocks_to_write, pcapng->file);
 
-
 	light_pcapng_release(blocks_to_write);
 
 	return pcapng;
 }
 
-light_pcapng_t *light_pcapng_open_append(const char* file_path)
+light_pcapng_t* light_pcapng_open_append(const char* file_path)
 {
 	DCHECK_NULLP(file_path, return NULL);
 
-	light_pcapng_t *pcapng = light_pcapng_open_read(file_path, LIGHT_TRUE);
+	light_pcapng_t* pcapng = light_pcapng_open_read(file_path, LIGHT_TRUE);
 	DCHECK_NULLP(pcapng, return NULL);
 	light_close(pcapng->file);
 
@@ -307,17 +311,18 @@ light_pcapng_t *light_pcapng_open_append(const char* file_path)
 	return pcapng;
 }
 
-light_pcapng_file_info *light_create_default_file_info()
+light_pcapng_file_info* light_create_default_file_info()
 {
-	light_pcapng_file_info *default_file_info = calloc(1, sizeof(light_pcapng_file_info));
+	light_pcapng_file_info* default_file_info = calloc(1, sizeof(light_pcapng_file_info));
 	memset(default_file_info, 0, sizeof(light_pcapng_file_info));
 	default_file_info->major_version = 1;
 	return default_file_info;
 }
 
-light_pcapng_file_info *light_create_file_info(const char *os_desc, const char *hardware_desc, const char *user_app_desc, const char *file_comment)
+light_pcapng_file_info* light_create_file_info(const char* os_desc, const char* hardware_desc,
+                                               const char* user_app_desc, const char* file_comment)
 {
-	light_pcapng_file_info *info = light_create_default_file_info();
+	light_pcapng_file_info* info = light_create_default_file_info();
 
 	if (os_desc != NULL && strlen(os_desc) > 0)
 	{
@@ -354,7 +359,7 @@ light_pcapng_file_info *light_create_file_info(const char *os_desc, const char *
 	return info;
 }
 
-void light_free_file_info(light_pcapng_file_info *info)
+void light_free_file_info(light_pcapng_file_info* info)
 {
 	if (info->user_app_desc != NULL)
 		free(info->user_app_desc);
@@ -371,19 +376,19 @@ void light_free_file_info(light_pcapng_file_info *info)
 	free(info);
 }
 
-light_pcapng_file_info *light_pcang_get_file_info(light_pcapng_t *pcapng)
+light_pcapng_file_info* light_pcang_get_file_info(light_pcapng_t* pcapng)
 {
 	DCHECK_NULLP(pcapng, return NULL);
 	return pcapng->file_info;
 }
 
-int light_get_next_packet(light_pcapng_t *pcapng, light_packet_header *packet_header, const uint8_t **packet_data)
+int light_get_next_packet(light_pcapng_t* pcapng, light_packet_header* packet_header, const uint8_t** packet_data)
 {
 	uint32_t type = LIGHT_UNKNOWN_DATA_BLOCK;
 
 	light_read_record(pcapng->file, &pcapng->pcapng);
 
-	//End of file or something is broken!
+	// End of file or something is broken!
 	if (pcapng == NULL)
 		return 0;
 
@@ -395,7 +400,7 @@ int light_get_next_packet(light_pcapng_t *pcapng, light_packet_header *packet_he
 			__append_interface_block_to_file_info(pcapng->pcapng, pcapng->file_info);
 
 		light_read_record(pcapng->file, &pcapng->pcapng);
-		if (pcapng->pcapng== NULL)
+		if (pcapng->pcapng == NULL)
 			break;
 		light_get_block_info(pcapng->pcapng, LIGHT_INFO_TYPE, &type, NULL);
 	}
@@ -407,7 +412,7 @@ int light_get_next_packet(light_pcapng_t *pcapng, light_packet_header *packet_he
 
 	if (type == LIGHT_ENHANCED_PACKET_BLOCK)
 	{
-		struct _light_enhanced_packet_block *epb = NULL;
+		struct _light_enhanced_packet_block* epb = NULL;
 
 		light_get_block_info(pcapng->pcapng, LIGHT_INFO_BODY, &epb, NULL);
 
@@ -422,7 +427,7 @@ int light_get_next_packet(light_pcapng_t *pcapng, light_packet_header *packet_he
 			timestamp = timestamp << 32;
 			timestamp += epb->timestamp_low;
 			uint64_t ticks_per_sec = pcapng->file_info->timestamp_ticks_per_second[epb->interface_id];
-			uint64_t packet_secs = (ticks_per_sec != 0 ?  timestamp / ticks_per_sec : 0);
+			uint64_t packet_secs = (ticks_per_sec != 0 ? timestamp / ticks_per_sec : 0);
 			if (packet_secs <= MAXIMUM_PACKET_SECONDS_VALUE && packet_secs != 0)
 			{
 				uint64_t ticks = timestamp % ticks_per_sec;
@@ -450,7 +455,7 @@ int light_get_next_packet(light_pcapng_t *pcapng, light_packet_header *packet_he
 
 	else if (type == LIGHT_SIMPLE_PACKET_BLOCK)
 	{
-		struct _light_simple_packet_block *spb = NULL;
+		struct _light_simple_packet_block* spb = NULL;
 
 		light_get_block_info(pcapng->pcapng, LIGHT_INFO_BODY, &spb, NULL);
 
@@ -468,7 +473,7 @@ int light_get_next_packet(light_pcapng_t *pcapng, light_packet_header *packet_he
 	packet_header->comment = NULL;
 	packet_header->comment_length = 0;
 
-	light_option option = light_get_option(pcapng->pcapng, 1); // get comment
+	light_option option = light_get_option(pcapng->pcapng, 1);  // get comment
 	if (option != NULL)
 	{
 		packet_header->comment_length = light_get_option_length(option);
@@ -480,7 +485,7 @@ int light_get_next_packet(light_pcapng_t *pcapng, light_packet_header *packet_he
 
 static const uint8_t NSEC_PRECISION = 9;
 
-void light_write_packet(light_pcapng_t *pcapng, const light_packet_header *packet_header, const uint8_t *packet_data)
+void light_write_packet(light_pcapng_t* pcapng, const light_packet_header* packet_header, const uint8_t* packet_data)
 {
 	DCHECK_NULLP(pcapng, return);
 	DCHECK_NULLP(packet_header, return);
@@ -506,11 +511,14 @@ void light_write_packet(light_pcapng_t *pcapng, const light_packet_header *packe
 		interface_block.reserved = 0;
 		interface_block.snapshot_length = 0;
 
-		light_pcapng iface_block_pcapng = light_alloc_block(LIGHT_INTERFACE_BLOCK, (const uint32_t*)&interface_block, sizeof(struct _light_interface_description_block)+3*sizeof(uint32_t));
+		light_pcapng iface_block_pcapng =
+		    light_alloc_block(LIGHT_INTERFACE_BLOCK, (const uint32_t*)&interface_block,
+		                      sizeof(struct _light_interface_description_block) + 3 * sizeof(uint32_t));
 
 		// let all written packets has a timestamp resolution in nsec - this way we will not loose the precision;
 		// when a possibility to write interface blocks is added, the precision should be taken from them
-		light_option resolution_option = light_create_option(LIGHT_OPTION_IF_TSRESOL, sizeof(NSEC_PRECISION), (uint8_t*)&NSEC_PRECISION);
+		light_option resolution_option =
+		    light_create_option(LIGHT_OPTION_IF_TSRESOL, sizeof(NSEC_PRECISION), (uint8_t*)&NSEC_PRECISION);
 		light_add_option(NULL, iface_block_pcapng, resolution_option, LIGHT_FALSE);
 
 		blocks_to_write = iface_block_pcapng;
@@ -519,9 +527,9 @@ void light_write_packet(light_pcapng_t *pcapng, const light_packet_header *packe
 
 	size_t option_size = sizeof(struct _light_enhanced_packet_block) + packet_header->captured_length;
 	PADD32(option_size, &option_size);
-	uint8_t *epb_memory = calloc(1, option_size);
-	//memset(epb_memory, 0, option_size); should be redundant with calloc
-	struct _light_enhanced_packet_block *epb = (struct _light_enhanced_packet_block *)epb_memory;
+	uint8_t* epb_memory = calloc(1, option_size);
+	// memset(epb_memory, 0, option_size); should be redundant with calloc
+	struct _light_enhanced_packet_block* epb = (struct _light_enhanced_packet_block*)epb_memory;
 	epb->interface_id = iface_id;
 
 	uint64_t timestamp, packet_secs = (uint64_t)packet_header->timestamp.tv_sec;
@@ -540,12 +548,14 @@ void light_write_packet(light_pcapng_t *pcapng, const light_packet_header *packe
 
 	memcpy(epb->packet_data, packet_data, packet_header->captured_length);
 
-	light_pcapng packet_block_pcapng = light_alloc_block(LIGHT_ENHANCED_PACKET_BLOCK, (const uint32_t*)epb_memory, option_size+3*sizeof(uint32_t));
+	light_pcapng packet_block_pcapng =
+	    light_alloc_block(LIGHT_ENHANCED_PACKET_BLOCK, (const uint32_t*)epb_memory, option_size + 3 * sizeof(uint32_t));
 	free(epb_memory);
 
 	if (packet_header->comment_length > 0)
 	{
-		light_option packet_comment_opt = light_create_option(LIGHT_OPTION_COMMENT, packet_header->comment_length, packet_header->comment);
+		light_option packet_comment_opt =
+		    light_create_option(LIGHT_OPTION_COMMENT, packet_header->comment_length, packet_header->comment);
 		light_add_option(NULL, packet_block_pcapng, packet_comment_opt, LIGHT_FALSE);
 	}
 
@@ -559,7 +569,7 @@ void light_write_packet(light_pcapng_t *pcapng, const light_packet_header *packe
 	light_pcapng_release(blocks_to_write);
 }
 
-void light_pcapng_close(light_pcapng_t *pcapng)
+void light_pcapng_close(light_pcapng_t* pcapng)
 {
 	DCHECK_NULLP(pcapng, return);
 
@@ -575,7 +585,7 @@ void light_pcapng_close(light_pcapng_t *pcapng)
 	free(pcapng);
 }
 
-void light_pcapng_flush(light_pcapng_t *pcapng)
+void light_pcapng_flush(light_pcapng_t* pcapng)
 {
 	light_flush(pcapng->file);
 }

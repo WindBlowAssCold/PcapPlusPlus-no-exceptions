@@ -4,7 +4,6 @@
 
 namespace pcpp
 {
-
 	TLVRecordBuilder::TLVRecordBuilder()
 	{
 		m_RecType = 0;
@@ -108,5 +107,4 @@ namespace pcpp
 		else
 			memset(m_RecValue, 0, recValueLen);
 	}
-
 }  // namespace pcpp

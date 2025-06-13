@@ -10,7 +10,6 @@
 
 namespace pcpp
 {
-
 	MplsLayer::MplsLayer(uint32_t mplsLabel, uint8_t ttl, uint8_t experimentalUseValue, bool bottomOfStack)
 	{
 		const size_t headerLen = sizeof(mpls_header);
@@ -156,5 +155,4 @@ namespace pcpp
 		return "MPLS Layer, Label: " + labelStream.str() + ", Exp: " + expStream.str() + ", TTL: " + ttlStream.str() +
 		       ", Bottom of stack: " + bottomOfStack;
 	}
-
 }  // namespace pcpp

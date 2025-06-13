@@ -257,7 +257,6 @@ namespace pcpp
 
 	void WireGuardHandshakeResponseLayer::setSenderIndex(uint32_t senderIndex)
 	{
-
 		wg_handshake_response* msg = reinterpret_cast<wg_handshake_response*>(m_Data);
 		msg->senderIndex = htobe32(senderIndex);
 	}
@@ -407,5 +406,4 @@ namespace pcpp
 		wg_transport_data* msg = reinterpret_cast<wg_transport_data*>(m_Data);
 		memcpy(msg->encryptedData, encryptedData, encryptedDataLen);
 	}
-
 }  // namespace pcpp

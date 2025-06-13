@@ -55,7 +55,6 @@ int gettimeofday(struct timeval* tp, struct timezone* tzp)
 
 namespace
 {
-
 	/// @class PcloseDeleter
 	/// A deleter that cleans up a FILE handle using pclose.
 	struct PcloseDeleter
@@ -71,7 +70,6 @@ namespace
 
 namespace pcpp
 {
-
 	const SystemCore SystemCores::Core0 = { 0x01, 0 };
 	const SystemCore SystemCores::Core1 = { 0x02, 1 };
 	const SystemCore SystemCores::Core2 = { 0x04, 2 };
@@ -183,7 +181,8 @@ namespace pcpp
 		    std::unique_ptr<FILE, PcloseDeleter>(POPEN(command.c_str(), "r"));
 		if (!pipe)
 		{
-			throw std::runtime_error("Error executing command: " + command);
+			return std::string();
+			// throw std::runtime_error("Error executing command: " + command);
 		}
 
 		std::array<char, 128> buffer{};
@@ -375,5 +374,4 @@ namespace pcpp
 		sigaction(SIGINT, &action, nullptr);
 #endif
 	}
-
 }  // namespace pcpp

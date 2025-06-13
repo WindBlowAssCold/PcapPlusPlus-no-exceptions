@@ -255,5 +255,4 @@ namespace pcpp
 	{
 		return "SMTP response layer, status code: " + getStatusCodeAsString(getStatusCode());
 	}
-
 }  // namespace pcpp

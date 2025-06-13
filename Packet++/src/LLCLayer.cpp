@@ -8,7 +8,6 @@
 
 namespace pcpp
 {
-
 	LLCLayer::LLCLayer(uint8_t dsap, uint8_t ssap, uint8_t control)
 	{
 		m_DataLen = sizeof(llc_header);
@@ -52,5 +51,4 @@ namespace pcpp
 	{
 		return dataLen >= sizeof(llc_header) && !(data[0] == 0xFF && data[1] == 0xFF);
 	}
-
 }  // namespace pcpp

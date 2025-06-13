@@ -5,7 +5,6 @@
 
 namespace pcpp
 {
-
 	// -------- Class NdpOptionBuilder -----------------
 
 	NdpOption NdpOptionBuilder::build() const
@@ -208,5 +207,4 @@ namespace pcpp
 
 		return typeStream.str();
 	}
-
 }  // namespace pcpp

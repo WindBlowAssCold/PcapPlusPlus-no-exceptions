@@ -7,7 +7,6 @@
 
 namespace pcpp
 {
-
 	RadiusAttribute RadiusAttributeBuilder::build() const
 	{
 		size_t recSize = m_RecValueLen + 2;
@@ -249,5 +248,4 @@ namespace pcpp
 		}
 		return false;
 	}
-
 }  // namespace pcpp

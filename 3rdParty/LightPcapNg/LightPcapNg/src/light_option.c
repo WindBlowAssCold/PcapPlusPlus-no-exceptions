@@ -28,14 +28,17 @@
 
 light_option light_get_option(const light_pcapng pcapng, uint16_t option_code)
 {
-	if (pcapng == NULL) {
+	if (pcapng == NULL)
+	{
 		return NULL;
 	}
 
 	light_option iterator = pcapng->options;
 
-	while (iterator != NULL) {
-		if (iterator->custom_option_code == option_code) {
+	while (iterator != NULL)
+	{
+		if (iterator->custom_option_code == option_code)
+		{
 			break;
 		}
 		iterator = iterator->next_option;
@@ -54,7 +57,7 @@ const light_option light_get_next_option(const light_option option)
 	return option->next_option;
 }
 
-uint32_t *light_get_option_data(const light_option option)
+uint32_t* light_get_option_data(const light_option option)
 {
 	return option->data;
 }

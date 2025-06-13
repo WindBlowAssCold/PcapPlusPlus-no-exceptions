@@ -7,7 +7,6 @@
 
 namespace pcpp
 {
-
 	bool TelnetLayer::isDataField(uint8_t* pos) const
 	{
 		// "FF FF" means data
@@ -477,5 +476,4 @@ namespace pcpp
 			return "Telnet Data";
 		return "Telnet Control";
 	}
-
 }  // namespace pcpp

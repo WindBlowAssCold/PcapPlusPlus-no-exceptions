@@ -946,5 +946,4 @@ namespace pcpp
 		msgHdr->safi = safi;
 		m_Protocol = BGP;
 	}
-
 }  // namespace pcpp

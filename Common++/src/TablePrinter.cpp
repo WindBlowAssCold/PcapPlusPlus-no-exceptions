@@ -10,7 +10,6 @@
 
 namespace pcpp
 {
-
 	TablePrinter::TablePrinter(std::vector<std::string> columnNames, std::vector<int> columnWidths)
 	    : m_ColumnNames(std::move(columnNames)), m_ColumnWidths(std::move(columnWidths)), m_FirstRow(true),
 	      m_TableClosed(false)
@@ -132,5 +131,4 @@ namespace pcpp
 
 		printSeparator();
 	}
-
 }  // namespace pcpp

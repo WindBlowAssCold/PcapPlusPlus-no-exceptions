@@ -8,7 +8,6 @@
 
 namespace pcpp
 {
-
 	std::string byteArrayToHexString(const uint8_t* byteArr, size_t byteArrSize, int stringSizeLimit)
 	{
 		if (stringSizeLimit <= 0)
@@ -107,5 +106,4 @@ namespace pcpp
 
 		return nullptr;
 	}
-
 }  // namespace pcpp

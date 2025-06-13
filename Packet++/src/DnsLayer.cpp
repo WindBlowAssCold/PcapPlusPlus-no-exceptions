@@ -7,7 +7,6 @@
 
 namespace pcpp
 {
-
 	// ~~~~~~~~
 	// DnsLayer
 	// ~~~~~~~~
@@ -855,5 +854,4 @@ namespace pcpp
 	{
 		setTcpMessageLength(m_DataLen - sizeof(uint16_t));
 	}
-
 }  // namespace pcpp

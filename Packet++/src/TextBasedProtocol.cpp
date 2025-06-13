@@ -7,7 +7,6 @@
 
 namespace pcpp
 {
-
 	// this implementation of strnlen is required since mingw doesn't have strnlen
 	size_t tbp_my_own_strnlen(const char* s, size_t maxlen)
 	{
@@ -698,5 +697,4 @@ namespace pcpp
 		m_NameOffsetInMessage = fieldOffsetInMessage;
 		m_ValueOffsetInMessage = m_NameOffsetInMessage + valueAndNameDifference;
 	}
-
 }  // namespace pcpp

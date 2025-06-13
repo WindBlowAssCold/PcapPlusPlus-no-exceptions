@@ -6,7 +6,6 @@
 
 namespace pcpp
 {
-
 	pcap_rmtauth PcapRemoteAuthentication::getPcapRmAuth() const
 	{
 		pcap_rmtauth result;
@@ -102,5 +101,4 @@ namespace pcpp
 		return new PcapRemoteDevice(m_InterfaceDetails, m_RemoteAuthentication, m_RemoteMachineIpAddress,
 		                            m_RemoteMachinePort);
 	}
-
 }  // namespace pcpp

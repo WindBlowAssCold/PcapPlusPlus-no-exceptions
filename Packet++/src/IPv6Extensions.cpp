@@ -9,7 +9,6 @@
 
 namespace pcpp
 {
-
 	// =============
 	// IPv6Extension
 	// =============
@@ -228,7 +227,6 @@ namespace pcpp
 
 	IPv6Address IPv6RoutingHeader::getRoutingAdditionalDataAsIPv6Address(size_t offset) const
 	{
-
 		size_t routingAddDataLen = getRoutingAdditionalDataLength();
 		if (routingAddDataLen - offset >= 16)
 			return IPv6Address(getRoutingAdditionalData() + offset);
@@ -282,5 +280,4 @@ namespace pcpp
 
 		return (size_t)result;
 	}
-
 }  // namespace pcpp

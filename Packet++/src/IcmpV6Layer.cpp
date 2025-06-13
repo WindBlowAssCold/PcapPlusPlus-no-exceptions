@@ -13,7 +13,6 @@
 
 namespace pcpp
 {
-
 	Layer* IcmpV6Layer::parseIcmpV6Layer(uint8_t* data, size_t dataLen, Layer* prevLayer, Packet* packet)
 	{
 		if (dataLen < sizeof(icmpv6hdr))
@@ -164,5 +163,4 @@ namespace pcpp
 		typeStream << (int)getMessageType();
 		return "ICMPv6 Layer, Echo Request/Reply Message (type: " + typeStream.str() + ")";
 	}
-
 }  // namespace pcpp

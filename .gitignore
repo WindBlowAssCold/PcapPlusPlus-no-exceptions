@@ -75,3 +75,7 @@ venv/**
 
 #MacOS system files
 **/.DS_Store
+
+
+install/**
+install

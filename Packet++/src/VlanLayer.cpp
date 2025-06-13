@@ -13,7 +13,6 @@
 
 namespace pcpp
 {
-
 	VlanLayer::VlanLayer(const uint16_t vlanID, bool cfi, uint8_t priority, uint16_t etherType)
 	{
 		const size_t headerLen = sizeof(vlan_header);
@@ -143,5 +142,4 @@ namespace pcpp
 		return "VLAN Layer, Priority: " + priStream.str() + ", Vlan ID: " + idStream.str() +
 		       ", CFI: " + cfiStream.str();
 	}
-
 }  // namespace pcpp

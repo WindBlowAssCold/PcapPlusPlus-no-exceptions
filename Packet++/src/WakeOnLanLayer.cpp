@@ -6,7 +6,6 @@
 
 namespace pcpp
 {
-
 	void WakeOnLanLayer::init(uint16_t len)
 	{
 		m_Data = new uint8_t[len];
@@ -131,5 +130,4 @@ namespace pcpp
 	{
 		return "Wake On LAN Layer, target address: " + getTargetAddr().toString();
 	}
-
 }  // namespace pcpp

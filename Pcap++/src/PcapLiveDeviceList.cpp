@@ -44,15 +44,15 @@ namespace pcpp
 	{
 		PointerVector<PcapLiveDevice> deviceList;
 		std::unique_ptr<pcap_if_t, internal::PcapFreeAllDevsDeleter> interfaceList;
-		try
-		{
-			interfaceList = internal::getAllLocalPcapDevices();
-		}
-		catch (const std::exception& e)
-		{
-			(void)e;  // Suppress the unreferenced local variable warning when PCPP_LOG_ERROR is disabled
-			PCPP_LOG_ERROR(e.what());
-		}
+		// try
+		//{
+		interfaceList = internal::getAllLocalPcapDevices();
+		//}
+		// catch (const std::exception& e)
+		//{
+		//	(void)e;  // Suppress the unreferenced local variable warning when PCPP_LOG_ERROR is disabled
+		//	PCPP_LOG_ERROR(e.what());
+		//}
 
 		PCPP_LOG_DEBUG("Pcap lib version info: " << IPcapDevice::getPcapLibVersionInfo());
 
@@ -99,31 +99,30 @@ namespace pcpp
 		else
 		{
 			int dnsServerCounter = 0;
-			try
-			{
-				dnsServers.push_back(IPv4Address(fixedInfo->DnsServerList.IpAddress.String));
-				PCPP_LOG_DEBUG("Default DNS server IP #" << dnsServerCounter++ << ": "
-				                                         << fixedInfo->DnsServerList.IpAddress.String);
-			}
-			catch (const std::exception&)
-			{
-				PCPP_LOG_DEBUG(
-				    "Failed to parse default DNS server IP address: " << fixedInfo->DnsServerList.IpAddress.String);
-			}
+			// try
+			//{
+			dnsServers.push_back(IPv4Address(fixedInfo->DnsServerList.IpAddress.String));
+			PCPP_LOG_DEBUG("Default DNS server IP #" << dnsServerCounter++ << ": "
+			                                         << fixedInfo->DnsServerList.IpAddress.String);
+			//}
+			// catch (const std::exception&)
+			//{
+			//	PCPP_LOG_DEBUG(
+			//	    "Failed to parse default DNS server IP address: " << fixedInfo->DnsServerList.IpAddress.String);
+			//}
 
 			pIPAddr = fixedInfo->DnsServerList.Next;
 			while (pIPAddr)
 			{
-				try
-				{
-					dnsServers.push_back(IPv4Address(pIPAddr->IpAddress.String));
-					PCPP_LOG_DEBUG("Default DNS server IP #" << dnsServerCounter++ << ": "
-					                                         << pIPAddr->IpAddress.String);
-				}
-				catch (const std::exception&)
-				{
-					PCPP_LOG_DEBUG("Failed to parse DNS server IP address: " << pIPAddr->IpAddress.String);
-				}
+				// try
+				//{
+				dnsServers.push_back(IPv4Address(pIPAddr->IpAddress.String));
+				PCPP_LOG_DEBUG("Default DNS server IP #" << dnsServerCounter++ << ": " << pIPAddr->IpAddress.String);
+				//}
+				// catch (const std::exception&)
+				//{
+				//	PCPP_LOG_DEBUG("Failed to parse DNS server IP address: " << pIPAddr->IpAddress.String);
+				//}
 				pIPAddr = pIPAddr->Next;
 			}
 		}
@@ -167,15 +166,15 @@ namespace pcpp
 			lineStream >> headline;
 			lineStream >> dnsIP;
 			IPv4Address dnsIPAddr;
-			try
-			{
-				dnsIPAddr = IPv4Address(dnsIP);
-			}
-			catch (const std::exception& e)
-			{
-				PCPP_LOG_DEBUG("Failed to parse DNS server IP address: " << dnsIP << ": " << e.what());
-				continue;
-			}
+			// try
+			//{
+			dnsIPAddr = IPv4Address(dnsIP);
+			//}
+			// catch (const std::exception& e)
+			//{
+			//	PCPP_LOG_DEBUG("Failed to parse DNS server IP address: " << dnsIP << ": " << e.what());
+			//	continue;
+			//}
 
 			if (std::find(dnsServers.begin(), dnsServers.end(), dnsIPAddr) == dnsServers.end())
 			{
@@ -222,15 +221,15 @@ namespace pcpp
 			uint8_t buf[20];
 			char* serverAddressCString = (char*)buf;
 			CFStringGetCString(serverAddress, serverAddressCString, 20, kCFStringEncodingUTF8);
-			try
-			{
-				dnsServers.push_back(IPv4Address(serverAddressCString));
-				PCPP_LOG_DEBUG("Default DNS server IP #" << (int)(i + 1) << ": " << serverAddressCString);
-			}
-			catch (const std::exception& e)
-			{
-				PCPP_LOG_DEBUG("Failed to parse DNS server IP address: " << serverAddressCString << ": " << e.what());
-			}
+			// try
+			//{
+			dnsServers.push_back(IPv4Address(serverAddressCString));
+			PCPP_LOG_DEBUG("Default DNS server IP #" << (int)(i + 1) << ": " << serverAddressCString);
+			//}
+			// catch (const std::exception& e)
+			//{
+			//	PCPP_LOG_DEBUG("Failed to parse DNS server IP address: " << serverAddressCString << ": " << e.what());
+			//}
 		}
 
 		CFRelease(dynRef);
@@ -249,15 +248,15 @@ namespace pcpp
 			if (inaddr == nullptr)
 				continue;
 
-			try
-			{
-				dnsServers.push_back(IPv4Address(internal::in_addr2int(*inaddr)));
-			}
-			catch (const std::exception& e)
-			{
-				PCPP_LOG_DEBUG("Failed to parse DNS server IP address: " << internal::in_addr2int(*inaddr) << ": "
-				                                                         << e.what());
-			}
+			// try
+			//{
+			dnsServers.push_back(IPv4Address(internal::in_addr2int(*inaddr)));
+			//}
+			// catch (const std::exception& e)
+			//{
+			//	PCPP_LOG_DEBUG("Failed to parse DNS server IP address: " << internal::in_addr2int(*inaddr) << ": "
+			//	                                                         << e.what());
+			//}
 		}
 
 #endif
@@ -317,15 +316,15 @@ namespace pcpp
 	PcapLiveDevice* PcapLiveDeviceList::getDeviceByIp(const std::string& ipAddrAsString) const
 	{
 		IPAddress ipAddr;
-		try
-		{
-			ipAddr = IPAddress(ipAddrAsString);
-		}
-		catch (const std::exception&)
-		{
-			PCPP_LOG_ERROR("IP address is not valid: " + ipAddrAsString);
-			return nullptr;
-		}
+		// try
+		//{
+		ipAddr = IPAddress(ipAddrAsString);
+		//}
+		// catch (const std::exception&)
+		//{
+		//	PCPP_LOG_ERROR("IP address is not valid: " + ipAddrAsString);
+		//	return nullptr;
+		//}
 
 		PcapLiveDevice* result = getDeviceByIp(ipAddr);
 		return result;
@@ -358,15 +357,20 @@ namespace pcpp
 
 	PcapLiveDevice* PcapLiveDeviceList::getDeviceByIpOrName(const std::string& ipOrName) const
 	{
-		try
-		{
-			IPAddress interfaceIP = IPAddress(ipOrName);
-			return getDeviceByIp(interfaceIP);
-		}
-		catch (std::exception&)
-		{
+		// try
+		//{
+		IPAddress interfaceIP = IPAddress(ipOrName);
+		auto dev = getDeviceByIp(interfaceIP);
+
+		if (dev == nullptr)
 			return getDeviceByName(ipOrName);
-		}
+		else
+			return dev;
+		//}
+		// catch (std::exception&)
+		//{
+		//	return getDeviceByName(ipOrName);
+		//}
 	}
 
 	PcapLiveDeviceList* PcapLiveDeviceList::clone()
@@ -383,5 +387,4 @@ namespace pcpp
 
 		syncPointerVectors(m_DeviceList, m_LiveDeviceListView);
 	}
-
 }  // namespace pcpp

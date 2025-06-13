@@ -12,7 +12,6 @@
 
 namespace pcpp
 {
-
 	// --------------
 	// SSLCipherSuite
 	// --------------
@@ -2150,5 +2149,4 @@ namespace pcpp
 	{
 		return "Unknown message";
 	}
-
 }  // namespace pcpp

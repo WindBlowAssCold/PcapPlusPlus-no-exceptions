@@ -6,7 +6,6 @@
 
 namespace pcpp
 {
-
 	pcpp::CotpLayer::CotpLayer(uint8_t tpduNumber)
 	{
 		const size_t headerLen = sizeof(cotphdr);

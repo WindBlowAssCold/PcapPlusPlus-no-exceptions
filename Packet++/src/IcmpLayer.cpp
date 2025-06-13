@@ -10,7 +10,6 @@
 
 namespace pcpp
 {
-
 	icmp_router_address_structure* icmp_router_advertisement::getRouterAddress(int index) const
 	{
 		if (index < 0 || index >= header->advertisementCount)
@@ -708,5 +707,4 @@ namespace pcpp
 
 		return "ICMP Layer, " + messageTypeAsString + " (type: " + typeStream.str() + ")";
 	}
-
 }  // namespace pcpp

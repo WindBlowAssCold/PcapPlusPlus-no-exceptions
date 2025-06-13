@@ -4,7 +4,6 @@
 
 namespace pcpp
 {
-
 	// region LdapOperationType
 
 	// clang-format off
@@ -259,45 +258,45 @@ namespace pcpp
 
 	LdapLayer* LdapLayer::parseLdapMessage(uint8_t* data, size_t dataLen, Layer* prevLayer, Packet* packet)
 	{
-		try
+		// try
+		//{
+		auto asn1Record = Asn1Record::decode(data, dataLen, true);
+		auto operationType = LdapOperationType::fromUintValue(
+		    asn1Record->castAs<Asn1SequenceRecord>()->getSubRecords().at(operationTypeIndex)->getTagType());
+		switch (operationType)
 		{
-			auto asn1Record = Asn1Record::decode(data, dataLen, true);
-			auto operationType = LdapOperationType::fromUintValue(
-			    asn1Record->castAs<Asn1SequenceRecord>()->getSubRecords().at(operationTypeIndex)->getTagType());
-			switch (operationType)
-			{
-			case LdapOperationType::BindRequest:
-				return new LdapBindRequestLayer(std::move(asn1Record), data, dataLen, prevLayer, packet);
-			case LdapOperationType::BindResponse:
-				return new LdapBindResponseLayer(std::move(asn1Record), data, dataLen, prevLayer, packet);
-			case LdapOperationType::UnbindRequest:
-				return new LdapUnbindRequestLayer(std::move(asn1Record), data, dataLen, prevLayer, packet);
-			case LdapOperationType::SearchRequest:
-				return new LdapSearchRequestLayer(std::move(asn1Record), data, dataLen, prevLayer, packet);
-			case LdapOperationType::SearchResultEntry:
-				return new LdapSearchResultEntryLayer(std::move(asn1Record), data, dataLen, prevLayer, packet);
-			case LdapOperationType::SearchResultDone:
-				return new LdapSearchResultDoneLayer(std::move(asn1Record), data, dataLen, prevLayer, packet);
-			case LdapOperationType::ModifyResponse:
-				return new LdapModifyResponseLayer(std::move(asn1Record), data, dataLen, prevLayer, packet);
-			case LdapOperationType::AddResponse:
-				return new LdapAddResponseLayer(std::move(asn1Record), data, dataLen, prevLayer, packet);
-			case LdapOperationType::DeleteResponse:
-				return new LdapDeleteResponseLayer(std::move(asn1Record), data, dataLen, prevLayer, packet);
-			case LdapOperationType::ModifyDNResponse:
-				return new LdapModifyDNResponseLayer(std::move(asn1Record), data, dataLen, prevLayer, packet);
-			case LdapOperationType::CompareResponse:
-				return new LdapCompareResponseLayer(std::move(asn1Record), data, dataLen, prevLayer, packet);
-			case LdapOperationType::Unknown:
-				return nullptr;
-			default:
-				return new LdapLayer(std::move(asn1Record), data, dataLen, prevLayer, packet);
-			}
-		}
-		catch (...)
-		{
+		case LdapOperationType::BindRequest:
+			return new LdapBindRequestLayer(std::move(asn1Record), data, dataLen, prevLayer, packet);
+		case LdapOperationType::BindResponse:
+			return new LdapBindResponseLayer(std::move(asn1Record), data, dataLen, prevLayer, packet);
+		case LdapOperationType::UnbindRequest:
+			return new LdapUnbindRequestLayer(std::move(asn1Record), data, dataLen, prevLayer, packet);
+		case LdapOperationType::SearchRequest:
+			return new LdapSearchRequestLayer(std::move(asn1Record), data, dataLen, prevLayer, packet);
+		case LdapOperationType::SearchResultEntry:
+			return new LdapSearchResultEntryLayer(std::move(asn1Record), data, dataLen, prevLayer, packet);
+		case LdapOperationType::SearchResultDone:
+			return new LdapSearchResultDoneLayer(std::move(asn1Record), data, dataLen, prevLayer, packet);
+		case LdapOperationType::ModifyResponse:
+			return new LdapModifyResponseLayer(std::move(asn1Record), data, dataLen, prevLayer, packet);
+		case LdapOperationType::AddResponse:
+			return new LdapAddResponseLayer(std::move(asn1Record), data, dataLen, prevLayer, packet);
+		case LdapOperationType::DeleteResponse:
+			return new LdapDeleteResponseLayer(std::move(asn1Record), data, dataLen, prevLayer, packet);
+		case LdapOperationType::ModifyDNResponse:
+			return new LdapModifyDNResponseLayer(std::move(asn1Record), data, dataLen, prevLayer, packet);
+		case LdapOperationType::CompareResponse:
+			return new LdapCompareResponseLayer(std::move(asn1Record), data, dataLen, prevLayer, packet);
+		case LdapOperationType::Unknown:
 			return nullptr;
+		default:
+			return new LdapLayer(std::move(asn1Record), data, dataLen, prevLayer, packet);
 		}
+		//}
+		// catch (...)
+		//{
+		//	return nullptr;
+		//}
 	}
 
 	Asn1SequenceRecord* LdapLayer::getRootAsn1Record() const
@@ -348,14 +347,14 @@ namespace pcpp
 	LdapOperationType LdapLayer::getLdapOperationType() const
 	{
 		uint8_t tagType;
-		try
-		{
-			tagType = getLdapOperationAsn1Record()->getTagType();
-		}
-		catch (...)
-		{
-			tagType = LdapOperationType::Unknown;
-		}
+		// try
+		//{
+		tagType = getLdapOperationAsn1Record()->getTagType();
+		//}
+		// catch (...)
+		//{
+		//	tagType = LdapOperationType::Unknown;
+		//}
 
 		return LdapOperationType::fromUintValue(tagType);
 	}
@@ -564,7 +563,8 @@ namespace pcpp
 	{
 		if (getAuthenticationType() != LdapBindRequestLayer::AuthenticationType::Simple)
 		{
-			throw std::invalid_argument("Authentication type is not simple");
+			return std::string();
+			// throw std::invalid_argument("Authentication type is not simple");
 		}
 
 		auto authRecord =
@@ -576,7 +576,8 @@ namespace pcpp
 	{
 		if (getAuthenticationType() != LdapBindRequestLayer::AuthenticationType::Sasl)
 		{
-			throw std::invalid_argument("Authentication type is not sasl");
+			return {};
+			// throw std::invalid_argument("Authentication type is not sasl");
 		}
 
 		auto authRecord =
@@ -637,17 +638,17 @@ namespace pcpp
 
 	std::vector<uint8_t> LdapBindResponseLayer::getServerSaslCredentials() const
 	{
-		try
-		{
-			auto serverSaslCredentialsRecord =
-			    getLdapOperationAsn1Record()->getSubRecords().back()->castAs<Asn1GenericRecord>();
-			return { serverSaslCredentialsRecord->getValue(),
-				     serverSaslCredentialsRecord->getValue() + serverSaslCredentialsRecord->getValueLength() };
-		}
-		catch (const std::exception&)
-		{
-			return {};
-		}
+		// try
+		//{
+		auto serverSaslCredentialsRecord =
+		    getLdapOperationAsn1Record()->getSubRecords().back()->castAs<Asn1GenericRecord>();
+		return { serverSaslCredentialsRecord->getValue(),
+			     serverSaslCredentialsRecord->getValue() + serverSaslCredentialsRecord->getValueLength() };
+		//}
+		// catch (const std::exception&)
+		//{
+		//	return {};
+		//}
 	}
 
 	// endregion

@@ -6,7 +6,6 @@
 
 namespace pcpp
 {
-
 	VxlanLayer::VxlanLayer(uint32_t vni, uint16_t groupPolicyID, bool setGbpFlag, bool setPolicyAppliedFlag,
 	                       bool setDontLearnFlag)
 	{
@@ -56,5 +55,4 @@ namespace pcpp
 
 		m_NextLayer = new EthLayer(m_Data + sizeof(vxlan_header), m_DataLen - sizeof(vxlan_header), this, m_Packet);
 	}
-
 }  // namespace pcpp

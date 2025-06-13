@@ -8,7 +8,6 @@
 
 namespace pcpp
 {
-
 	uint16_t computeChecksum(ScalarBuffer<uint16_t> vec[], size_t vecSize)
 	{
 		uint32_t sum = 0;
@@ -243,5 +242,4 @@ namespace pcpp
 
 		return pcpp::fnvHash(vec, 2);
 	}
-
 }  // namespace pcpp

@@ -7,7 +7,6 @@
 
 namespace pcpp
 {
-
 	IDnsResource::IDnsResource(DnsLayer* dnsLayer, size_t offsetInLayer)
 	    : m_DnsLayer(dnsLayer), m_OffsetInLayer(offsetInLayer), m_NextResource(nullptr), m_ExternalRawData(nullptr)
 	{
@@ -280,7 +279,6 @@ namespace pcpp
 
 	size_t DnsResource::getDataLength() const
 	{
-
 		size_t sizeToRead = m_NameLength + 2 * sizeof(uint16_t) + sizeof(uint32_t);
 
 		// Heap buffer overflow may occur here, check boundary of m_DnsLayer->m_Data first
@@ -452,5 +450,4 @@ namespace pcpp
 	{
 		memcpy(getRawData() + m_NameLength + sizeof(uint16_t), &customValue, sizeof(uint16_t));
 	}
-
 }  // namespace pcpp

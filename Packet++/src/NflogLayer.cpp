@@ -99,5 +99,4 @@ namespace pcpp
 	{
 		return data && dataLen >= sizeof(nflog_header);
 	}
-
 }  // namespace pcpp

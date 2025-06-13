@@ -29,10 +29,10 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-light_pcapng light_read_from_path(const char *file_name)
+light_pcapng light_read_from_path(const char* file_name)
 {
 	light_pcapng head;
-	uint32_t *memory;
+	uint32_t* memory;
 	size_t size = 0;
 	light_file fd = light_open(file_name, LIGHT_OREAD);
 	DCHECK_ASSERT_EXP(fd != NULL, "could not open file", return NULL);
@@ -41,7 +41,8 @@ light_pcapng light_read_from_path(const char *file_name)
 	// DCHECK_INT(size, 0, light_stop);
 
 	memory = calloc(size, 1);
-	if (memory == NULL) {
+	if (memory == NULL)
+	{
 		fprintf(stderr, "Unable to alloc %zu bytes\n", size);
 		light_close(fd);
 		return NULL;
@@ -58,7 +59,7 @@ light_pcapng light_read_from_path(const char *file_name)
 	return head;
 }
 
-int light_pcapng_to_file(const char *file_name, const light_pcapng pcapng)
+int light_pcapng_to_file(const char* file_name, const light_pcapng pcapng)
 {
 	light_file fd = light_open(file_name, LIGHT_OWRITE);
 	size_t written = 0;
@@ -70,7 +71,7 @@ int light_pcapng_to_file(const char *file_name, const light_pcapng pcapng)
 	return written > 0 ? LIGHT_SUCCESS : LIGHT_FAILURE;
 }
 
-int light_pcapng_to_compressed_file(const char *file_name, const light_pcapng pcapng, int compression_level)
+int light_pcapng_to_compressed_file(const char* file_name, const light_pcapng pcapng, int compression_level)
 {
 	light_file fd = light_open_compression(file_name, LIGHT_OWRITE, compression_level);
 	size_t written = 0;
@@ -84,13 +85,13 @@ int light_pcapng_to_compressed_file(const char *file_name, const light_pcapng pc
 	return written > 0 ? LIGHT_SUCCESS : LIGHT_FAILURE;
 }
 
-
-light_pcapng_stream light_open_stream(const char *file_name)
+light_pcapng_stream light_open_stream(const char* file_name)
 {
 	light_pcapng_stream pcapng = calloc(1, sizeof(struct _light_pcapng_stream));
-	pcapng->file = light_open(file_name, LIGHT_OREAD); // PCPP patch
+	pcapng->file = light_open(file_name, LIGHT_OREAD);  // PCPP patch
 
-	if (pcapng->file == NULL) { // PCPP patch
+	if (pcapng->file == NULL)
+	{  // PCPP patch
 		free(pcapng);
 		return NULL;
 	}
@@ -103,26 +104,30 @@ light_pcapng light_read_stream(light_pcapng_stream pcapng)
 {
 	uint32_t block_type = 0;
 	uint32_t block_total_length = 0;
-	uint32_t *block_data = NULL;
+	uint32_t* block_data = NULL;
 
-	if (pcapng == NULL || !pcapng->valid) {
+	if (pcapng == NULL || !pcapng->valid)
+	{
 		return NULL;
 	}
 
-	if (pcapng->current_block) {
+	if (pcapng->current_block)
+	{
 		light_pcapng_release(pcapng->current_block);
 		pcapng->current_block = NULL;
 	}
 
 	// PCPP patch
 	if (light_read(pcapng->file, &block_type, sizeof(block_type)) == -1 ||
-			light_read(pcapng->file, &block_total_length, sizeof(block_total_length)) == -1) {
+	    light_read(pcapng->file, &block_total_length, sizeof(block_total_length)) == -1)
+	{
 		pcapng->valid = 0;
 		return NULL;
 	}
 
 	block_data = malloc(block_total_length);
-	if (block_data == NULL) {
+	if (block_data == NULL)
+	{
 		pcapng->valid = 0;
 		return NULL;
 	}
@@ -131,7 +136,8 @@ light_pcapng light_read_stream(light_pcapng_stream pcapng)
 	block_data[1] = block_total_length;
 
 	// PCPP patch
-	if (light_read(pcapng->file, &block_data[2], block_total_length - 2 * sizeof(uint32_t)) == -1) {
+	if (light_read(pcapng->file, &block_data[2], block_total_length - 2 * sizeof(uint32_t)) == -1)
+	{
 		free(block_data);
 		pcapng->valid = 0;
 		return NULL;
@@ -145,16 +151,18 @@ light_pcapng light_read_stream(light_pcapng_stream pcapng)
 
 int light_close_stream(light_pcapng_stream pcapng)
 {
-	if (pcapng == NULL) {
+	if (pcapng == NULL)
+	{
 		return LIGHT_BAD_STREAM;
 	}
 
-	if (pcapng->current_block) {
+	if (pcapng->current_block)
+	{
 		light_pcapng_release(pcapng->current_block);
 		pcapng->current_block = NULL;
 	}
 
-	light_close(pcapng->file); // PCPP patch
+	light_close(pcapng->file);  // PCPP patch
 	pcapng->valid = 0;
 	free(pcapng);
 

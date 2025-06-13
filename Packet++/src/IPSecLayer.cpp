@@ -12,7 +12,6 @@
 
 namespace pcpp
 {
-
 	// ---------------------------------
 	// AuthenticationHeaderLayer methods
 	// ---------------------------------
@@ -127,5 +126,4 @@ namespace pcpp
 		stream << "ESP Layer, SPI: 0x" << std::hex << getSPI();
 		return stream.str();
 	}
-
 }  // namespace pcpp

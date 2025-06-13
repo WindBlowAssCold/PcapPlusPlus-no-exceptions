@@ -5,7 +5,6 @@
 
 namespace pcpp
 {
-
 #define DHCP_MAGIC_NUMBER 0x63538263
 
 	DhcpOption DhcpOptionBuilder::build() const
@@ -308,5 +307,4 @@ namespace pcpp
 		m_OptionReader.changeTLVRecordCount(0 - getOptionsCount());
 		return true;
 	}
-
 }  // namespace pcpp

@@ -4,7 +4,6 @@
 
 namespace pcpp
 {
-
 	// -------------------------
 	// SSLVersion methods
 	// -------------------------
@@ -82,5 +81,4 @@ namespace pcpp
 			return "Unknown";
 		}
 	}
-
 }  // namespace pcpp

@@ -11,7 +11,6 @@
 
 namespace pcpp
 {
-
 #define PCPP_GTP_V1_GPDU_MESSAGE_TYPE 0xff
 
 	/// ==================
@@ -1366,5 +1365,4 @@ namespace pcpp
 
 		return basePtr;
 	}
-
 }  // namespace pcpp

@@ -10,7 +10,6 @@
 
 namespace pcpp
 {
-
 	WinPcapLiveDevice::WinPcapLiveDevice(DeviceInterfaceDetails interfaceDetails, bool calculateMTU,
 	                                     bool calculateMacAddress, bool calculateDefaultGateway)
 	    : PcapLiveDevice(std::move(interfaceDetails), calculateMTU, calculateMacAddress, calculateDefaultGateway)
@@ -107,14 +106,13 @@ namespace pcpp
 
 	void WinPcapLiveDevice::prepareCapture(bool asyncCapture, bool captureStats)
 	{
-
 		int mode = captureStats ? MODE_STAT : MODE_CAPT;
 		int res = pcap_setmode(m_PcapDescriptor.get(), mode);
 		if (res < 0)
 		{
-			throw std::runtime_error("Error setting the mode for device '" + m_InterfaceDetails.name +
-			                         "': " + m_PcapDescriptor.getLastError());
+			return;
+			// throw std::runtime_error("Error setting the mode for device '" + m_InterfaceDetails.name +
+			//                          "': " + m_PcapDescriptor.getLastError());
 		}
 	}
-
 }  // namespace pcpp

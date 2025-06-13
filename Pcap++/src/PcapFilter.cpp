@@ -15,7 +15,6 @@
 
 namespace pcpp
 {
-
 	static const int DEFAULT_SNAPLEN = 9000;
 
 	bool GeneralFilter::matchPacketWithFilter(RawPacket* rawPacket)
@@ -378,5 +377,4 @@ namespace pcpp
 		stream << m_Length;
 		result = "udp[4:2] " + parseOperator() + ' ' + stream.str();
 	}
-
 }  // namespace pcpp

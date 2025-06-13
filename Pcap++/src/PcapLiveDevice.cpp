@@ -84,7 +84,8 @@ namespace pcpp
 		case PcapLiveDevice::PCPP_INOUT:
 			return PCAP_D_INOUT;
 		default:
-			throw std::invalid_argument("Unknown direction type");
+			return PCAP_D_INOUT;
+			// throw std::invalid_argument("Unknown direction type");
 		}
 	}
 
@@ -108,7 +109,7 @@ namespace pcpp
 		}
 		return PCAP_TSTAMP_HOST;
 #else
-		throw std::logic_error("Error getting the timestamp provider - it is available only from libpcap 1.2");
+		// throw std::logic_error("Error getting the timestamp provider - it is available only from libpcap 1.2");
 #endif
 	}
 
@@ -124,7 +125,7 @@ namespace pcpp
 		}
 		return PCAP_TSTAMP_PRECISION_MICRO;
 #else
-		throw std::logic_error("Error getting timestamp precision - it is available only from libpcap 1.5");
+		// throw std::logic_error("Error getting timestamp precision - it is available only from libpcap 1.5");
 #endif
 	}
 
@@ -157,7 +158,7 @@ namespace pcpp
 		return std::find(supportedTstampTypes.get(), supportedTstampTypes.get() + numSupportedTstampTypes,
 		                 tstampType) != supportedTstampTypes.get() + numSupportedTstampTypes;
 #else
-		throw std::logic_error("Error retrieving timestamp types - it is available only from libpcap 1.2");
+		// throw std::logic_error("Error retrieving timestamp types - it is available only from libpcap 1.2");
 #endif
 	}
 
@@ -167,17 +168,20 @@ namespace pcpp
 #ifdef HAS_TIMESTAMP_TYPES_ENABLED
 		if (!isTimestampProviderSupportedByDevice(pcap, timestampProvider))
 		{
-			throw std::runtime_error("Selected timestamping provider is not supported");
+			return;
+			// throw std::runtime_error("Selected timestamping provider is not supported");
 		}
 
 		const int ret = pcap_set_tstamp_type(pcap.get(), getPcapTimestampProvider(timestampProvider));
 		if (ret != 0)
 		{
-			throw std::runtime_error("Cannot create the pcap device, error was: " + std::string(pcap.getLastError()));
+			return;
+			// throw std::runtime_error("Cannot create the pcap device, error was: " +
+			// std::string(pcap.getLastError()));
 		}
 
 #else
-		throw std::runtime_error("Error setting timestamp provider - it is available only from libpcap 1.2");
+		// throw std::runtime_error("Error setting timestamp provider - it is available only from libpcap 1.2");
 #endif
 	}
 
@@ -194,17 +198,19 @@ namespace pcpp
 		}
 		case PCAP_ERROR_TSTAMP_PRECISION_NOTSUP:
 		{
-			throw std::runtime_error(
-			    "Failed to set timestamping precision: the capture device does not support the requested precision");
+			return;
+			// throw std::runtime_error(
+			//     "Failed to set timestamping precision: the capture device does not support the requested precision");
 		}
 		default:
 		{
-			throw std::runtime_error("Failed to set timestamping precision, error was: " +
-			                         std::string(pcap.getLastError()));
+			return;
+			// throw std::runtime_error("Failed to set timestamping precision, error was: " +
+			//                          std::string(pcap.getLastError()));
 		}
 		}
 #else
-		throw std::runtime_error("Error setting timestamp precision - it is available only from libpcap 1.5");
+		// throw std::runtime_error("Error setting timestamp precision - it is available only from libpcap 1.5");
 #endif
 	}
 
@@ -433,26 +439,30 @@ namespace pcpp
 		auto pcap = internal::PcapHandle(pcap_create(device_name.c_str(), errbuf));
 		if (!pcap)
 		{
-			throw std::runtime_error("Cannot create the pcap device, error was: " + std::string(errbuf));
+			return internal::PcapHandle(nullptr);
+			// throw std::runtime_error("Cannot create the pcap device, error was: " + std::string(errbuf));
 		}
 
 		int ret = pcap_set_snaplen(pcap.get(), config.snapshotLength <= 0 ? DEFAULT_SNAPLEN : config.snapshotLength);
 		if (ret != 0)
 		{
-			throw std::runtime_error("Cannot set snaplan, error was: " + std::string(pcap.getLastError()));
+			return internal::PcapHandle(nullptr);
+			// throw std::runtime_error("Cannot set snaplan, error was: " + std::string(pcap.getLastError()));
 		}
 
 		ret = pcap_set_promisc(pcap.get(), config.mode);
 		if (ret != 0)
 		{
-			throw std::runtime_error("Cannot set promiscuous mode, error was: " + std::string(pcap.getLastError()));
+			return internal::PcapHandle(nullptr);
+			// throw std::runtime_error("Cannot set promiscuous mode, error was: " + std::string(pcap.getLastError()));
 		}
 
 		int timeout = (config.packetBufferTimeoutMs <= 0 ? LIBPCAP_OPEN_LIVE_TIMEOUT : config.packetBufferTimeoutMs);
 		ret = pcap_set_timeout(pcap.get(), timeout);
 		if (ret != 0)
 		{
-			throw std::runtime_error("Cannot set timeout on device, error was: " + std::string(pcap.getLastError()));
+			return internal::PcapHandle(nullptr);
+			// throw std::runtime_error("Cannot set timeout on device, error was: " + std::string(pcap.getLastError()));
 		}
 
 		if (config.packetBufferSize >= 100)
@@ -460,7 +470,8 @@ namespace pcpp
 			ret = pcap_set_buffer_size(pcap.get(), config.packetBufferSize);
 			if (ret != 0)
 			{
-				throw std::runtime_error("Cannot set buffer size, error was: " + std::string(pcap.getLastError()));
+				return internal::PcapHandle(nullptr);
+				// throw std::runtime_error("Cannot set buffer size, error was: " + std::string(pcap.getLastError()));
 			}
 		}
 
@@ -468,7 +479,8 @@ namespace pcpp
 		ret = pcap_set_immediate_mode(pcap.get(), 1);
 		if (ret != 0)
 		{
-			throw std::runtime_error("Cannot set immediate mode, error was: " + std::string(pcap.getLastError()));
+			return internal::PcapHandle(nullptr);
+			// throw std::runtime_error("Cannot set immediate mode, error was: " + std::string(pcap.getLastError()));
 		}
 #endif
 
@@ -485,7 +497,8 @@ namespace pcpp
 		ret = pcap_activate(pcap.get());
 		if (ret != 0)
 		{
-			throw std::runtime_error("Cannot activate the device, error was: " + std::string(pcap.getLastError()));
+			return internal::PcapHandle(nullptr);
+			// throw std::runtime_error("Cannot activate the device, error was: " + std::string(pcap.getLastError()));
 		}
 
 		if (config.direction != PCPP_INOUT)
@@ -494,8 +507,9 @@ namespace pcpp
 			ret = pcap_setdirection(pcap.get(), directionToSet);
 			if (ret != 0)
 			{
-				throw std::runtime_error("Failed to set direction for capturing packets, error was: " +
-				                         std::string(pcap.getLastError()));
+				return internal::PcapHandle(nullptr);
+				// throw std::runtime_error("Failed to set direction for capturing packets, error was: " +
+				//                          std::string(pcap.getLastError()));
 			}
 		}
 
@@ -540,14 +554,14 @@ namespace pcpp
 		}
 
 		internal::PcapHandle pcapDescriptor;
-		try
-		{
-			pcapDescriptor = doOpen(config);
-		}
-		catch (std::exception& ex)
-		{
-			PCPP_LOG_ERROR(ex.what());
-		}
+		// try
+		//{
+		pcapDescriptor = doOpen(config);
+		//}
+		// catch (std::exception& ex)
+		//{
+		//	PCPP_LOG_ERROR(ex.what());
+		//}
 
 		internal::PcapHandle pcapSendDescriptor;
 
@@ -558,14 +572,14 @@ namespace pcpp
 		}
 		else
 		{
-			try
-			{
-				pcapSendDescriptor = doOpen(config);
-			}
-			catch (std::exception& ex)
-			{
-				PCPP_LOG_ERROR(ex.what());
-			}
+			// try
+			//{
+			pcapSendDescriptor = doOpen(config);
+			//}
+			// catch (std::exception& ex)
+			//{
+			//	PCPP_LOG_ERROR(ex.what());
+			//}
 		}
 
 		if (pcapDescriptor == nullptr || (!isNflogDevice() && pcapSendDescriptor == nullptr))
@@ -658,15 +672,15 @@ namespace pcpp
 			return false;
 		}
 
-		try
-		{
-			prepareCapture(true, onStatsUpdate != nullptr);
-		}
-		catch (std::exception const& ex)
-		{
-			PCPP_LOG_ERROR("Failed to prepare capture: " << ex.what());
-			return false;
-		}
+		// try
+		//{
+		prepareCapture(true, onStatsUpdate != nullptr);
+		//}
+		// catch (std::exception const& ex)
+		//{
+		//	PCPP_LOG_ERROR("Failed to prepare capture: " << ex.what());
+		//	return false;
+		//}
 
 		m_CaptureCallbackMode = true;
 		m_cbOnPacketArrives = std::move(onPacketArrives);
@@ -710,15 +724,15 @@ namespace pcpp
 			return false;
 		}
 
-		try
-		{
-			prepareCapture(true, false);
-		}
-		catch (const std::exception& ex)
-		{
-			PCPP_LOG_ERROR("Failed to prepare capture: " << ex.what());
-			return false;
-		}
+		// try
+		//{
+		prepareCapture(true, false);
+		//}
+		// catch (const std::exception& ex)
+		//{
+		//	PCPP_LOG_ERROR("Failed to prepare capture: " << ex.what());
+		//	return false;
+		//}
 
 		m_CapturedPackets = &capturedPacketsVector;
 		m_CapturedPackets->clear();
@@ -753,15 +767,15 @@ namespace pcpp
 			return 0;
 		}
 
-		try
-		{
-			prepareCapture(false, false);
-		}
-		catch (const std::exception& ex)
-		{
-			PCPP_LOG_ERROR("Failed to prepare capture: " << ex.what());
-			return 0;
-		}
+		// try
+		//{
+		prepareCapture(false, false);
+		//}
+		// catch (const std::exception& ex)
+		//{
+		//	PCPP_LOG_ERROR("Failed to prepare capture: " << ex.what());
+		//	return 0;
+		//}
 		m_cbOnPacketArrives = nullptr;
 		m_cbOnPacketArrivesUserCookie = nullptr;
 
@@ -875,7 +889,8 @@ namespace pcpp
 
 		if (m_CaptureThread.get_id() != std::thread::id{} && m_CaptureThread.get_id() == std::this_thread::get_id())
 		{
-			throw std::runtime_error("Cannot stop capture from the capture thread itself");
+			return;
+			// throw std::runtime_error("Cannot stop capture from the capture thread itself");
 		}
 
 		m_StopThread = true;
@@ -1101,22 +1116,22 @@ namespace pcpp
 		strncpy(ifr.ifr_name, m_InterfaceDetails.name.c_str(), sizeof(ifr.ifr_name) - 1);
 
 		int socketfd = -1;
-		try
+		// try
+		//{
+		socketfd = socket(AF_INET, SOCK_DGRAM, IPPROTO_IP);
+		if (ioctl(socketfd, SIOCGIFMTU, &ifr) == -1)
 		{
-			socketfd = socket(AF_INET, SOCK_DGRAM, IPPROTO_IP);
-			if (ioctl(socketfd, SIOCGIFMTU, &ifr) == -1)
-			{
-				PCPP_LOG_DEBUG("Error in retrieving MTU: ioctl() returned -1");
-				m_DeviceMtu = 0;
-				return;
-			}
-			m_DeviceMtu = ifr.ifr_mtu;
-		}
-		catch (const std::exception& e)
-		{
-			PCPP_LOG_ERROR("Error in retrieving MTU: " << e.what());
+			PCPP_LOG_DEBUG("Error in retrieving MTU: ioctl() returned -1");
 			m_DeviceMtu = 0;
+			return;
 		}
+		m_DeviceMtu = ifr.ifr_mtu;
+		//}
+		// catch (const std::exception& e)
+		//{
+		//	PCPP_LOG_ERROR("Error in retrieving MTU: " << e.what());
+		//	m_DeviceMtu = 0;
+		//}
 
 		if (socketfd != -1)
 		{
@@ -1172,22 +1187,22 @@ namespace pcpp
 		strncpy(ifr.ifr_name, m_InterfaceDetails.name.c_str(), sizeof(ifr.ifr_name) - 1);
 
 		int socketfd = -1;
-		try
+		// try
+		//{
+		socketfd = socket(AF_INET, SOCK_DGRAM, IPPROTO_IP);
+		if (ioctl(socketfd, SIOCGIFHWADDR, &ifr) == -1)
 		{
-			socketfd = socket(AF_INET, SOCK_DGRAM, IPPROTO_IP);
-			if (ioctl(socketfd, SIOCGIFHWADDR, &ifr) == -1)
-			{
-				PCPP_LOG_DEBUG("Error in retrieving MAC address: ioctl() returned -1");
-				return;
-			}
+			PCPP_LOG_DEBUG("Error in retrieving MAC address: ioctl() returned -1");
+			return;
+		}
 
-			m_MacAddress = MacAddress(ifr.ifr_hwaddr.sa_data[0], ifr.ifr_hwaddr.sa_data[1], ifr.ifr_hwaddr.sa_data[2],
-			                          ifr.ifr_hwaddr.sa_data[3], ifr.ifr_hwaddr.sa_data[4], ifr.ifr_hwaddr.sa_data[5]);
-		}
-		catch (const std::exception& e)
-		{
-			PCPP_LOG_ERROR("Error in retrieving MAC address: " << e.what());
-		}
+		m_MacAddress = MacAddress(ifr.ifr_hwaddr.sa_data[0], ifr.ifr_hwaddr.sa_data[1], ifr.ifr_hwaddr.sa_data[2],
+		                          ifr.ifr_hwaddr.sa_data[3], ifr.ifr_hwaddr.sa_data[4], ifr.ifr_hwaddr.sa_data[5]);
+		//}
+		// catch (const std::exception& e)
+		//{
+		//	PCPP_LOG_ERROR("Error in retrieving MAC address: " << e.what());
+		//}
 
 		if (socketfd != -1)
 		{
@@ -1256,15 +1271,15 @@ namespace pcpp
 			{
 				if (m_InterfaceDetails.name.find(curAdapterInfo->AdapterName) != std::string::npos)
 				{
-					try
-					{
-						m_DefaultGateway = IPv4Address(curAdapterInfo->GatewayList.IpAddress.String);
-					}
-					catch (const std::exception& e)
-					{
-						(void)e;  // Suppress the unreferenced local variable warning when PCPP_LOG_ERROR is disabled
-						PCPP_LOG_ERROR("Error retrieving default gateway address: " << e.what());
-					}
+					// try
+					//{
+					m_DefaultGateway = IPv4Address(curAdapterInfo->GatewayList.IpAddress.String);
+					//}
+					// catch (const std::exception& e)
+					//{
+					//	(void)e;  // Suppress the unreferenced local variable warning when PCPP_LOG_ERROR is disabled
+					//	PCPP_LOG_ERROR("Error retrieving default gateway address: " << e.what());
+					//}
 					break;
 				}
 
@@ -1298,14 +1313,14 @@ namespace pcpp
 			std::stringstream interfaceGatewayStream;
 			interfaceGatewayStream << std::hex << interfaceGateway;
 			interfaceGatewayStream >> interfaceGatewayIPInt;
-			try
-			{
-				m_DefaultGateway = IPv4Address(interfaceGatewayIPInt);
-			}
-			catch (const std::exception& e)
-			{
-				PCPP_LOG_ERROR("Error retrieving default gateway address: " << e.what());
-			}
+			// try
+			//{
+			m_DefaultGateway = IPv4Address(interfaceGatewayIPInt);
+			//}
+			// catch (const std::exception& e)
+			//{
+			//	PCPP_LOG_ERROR("Error retrieving default gateway address: " << e.what());
+			//}
 		}
 #elif defined(__APPLE__)
 
@@ -1374,14 +1389,14 @@ namespace pcpp
 			PCPP_LOG_ERROR("Error retrieving default gateway address: Empty Message related to gate");
 			return;
 		}
-		try
-		{
-			m_DefaultGateway = IPv4Address(gateAddr->s_addr);
-		}
-		catch (const std::exception& e)
-		{
-			PCPP_LOG_ERROR("Error retrieving default gateway address: " << inet_ntoa(*gateAddr) << ": " << e.what());
-		}
+		// try
+		//{
+		m_DefaultGateway = IPv4Address(gateAddr->s_addr);
+		//}
+		// catch (const std::exception& e)
+		//{
+		//	PCPP_LOG_ERROR("Error retrieving default gateway address: " << inet_ntoa(*gateAddr) << ": " << e.what());
+		//}
 #elif defined(__FreeBSD__)
 		std::string command = "netstat -nr | grep default | grep " + m_InterfaceDetails.name;
 		std::string ifaceInfo = executeShellCommand(command);
@@ -1401,14 +1416,14 @@ namespace pcpp
 		// erase string after gateway IP address
 		ifaceInfo.resize(ifaceInfo.find(' ', 0));
 
-		try
-		{
-			m_DefaultGateway = IPv4Address(ifaceInfo);
-		}
-		catch (const std::exception& e)
-		{
-			PCPP_LOG_ERROR("Error retrieving default gateway address: " << ifaceInfo << ": " << e.what());
-		}
+		// try
+		//{
+		m_DefaultGateway = IPv4Address(ifaceInfo);
+		//}
+		// catch (const std::exception& e)
+		//{
+		//	PCPP_LOG_ERROR("Error retrieving default gateway address: " << ifaceInfo << ": " << e.what());
+		//}
 #endif
 	}
 
@@ -1443,5 +1458,4 @@ namespace pcpp
 
 	PcapLiveDevice::~PcapLiveDevice()
 	{}
-
 }  // namespace pcpp

@@ -23,15 +23,15 @@
 
 #ifndef __cplusplus
 
-#include "light_compression.h"
-#include "light_compression_functions.h"
-#include "light_file.h"
-#include <stdlib.h>
-#include <stdio.h>
-#include <string.h>
-#include <assert.h>
+#	include "light_compression.h"
+#	include "light_compression_functions.h"
+#	include "light_file.h"
+#	include <stdlib.h>
+#	include <stdio.h>
+#	include <string.h>
+#	include <assert.h>
 
-_compression_t * light_get_compression_context(int compression_level)
+_compression_t* light_get_compression_context(int compression_level)
 {
 	if (compression_level == 0)
 		return NULL;
@@ -53,7 +53,7 @@ void light_free_compression_context(_compression_t* context)
 	free(context);
 }
 
-_decompression_t * light_get_decompression_context()
+_decompression_t* light_get_decompression_context()
 {
 	if (get_decompression_context_ptr != NULL)
 		return get_decompression_context_ptr();
@@ -72,7 +72,6 @@ void light_free_decompression_context(_decompression_t* context)
 	free(context);
 }
 
-
 int light_is_compressed_file(const char* file_path)
 {
 	if (is_compressed_file != NULL)
@@ -81,17 +80,17 @@ int light_is_compressed_file(const char* file_path)
 		return 0;
 }
 
-size_t light_read_compressed(light_file fd, void *buf, size_t count)
+size_t light_read_compressed(light_file fd, void* buf, size_t count)
 {
 	if (read_compressed != NULL)
-		return read_compressed(fd,buf,count);
+		return read_compressed(fd, buf, count);
 	return 0;
 }
 
-size_t light_write_compressed(light_file fd, const void *buf, size_t count)
+size_t light_write_compressed(light_file fd, const void* buf, size_t count)
 {
 	if (write_compressed != NULL)
-		return write_compressed(fd,buf,count);
+		return write_compressed(fd, buf, count);
 	return 0;
 }
 

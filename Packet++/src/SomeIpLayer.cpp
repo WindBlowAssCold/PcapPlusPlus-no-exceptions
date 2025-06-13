@@ -10,7 +10,6 @@
 
 namespace pcpp
 {
-
 	// SomeIpLayer
 
 	void splitUint32Id(uint32_t uint32Id, uint16_t& uint16IdUpper, uint16_t& uint16IdLower)

@@ -4,7 +4,6 @@
 
 namespace pcpp
 {
-
 	std::string PacketTrailerLayer::getTrailerDataAsHexString() const
 	{
 		return byteArrayToHexString(m_Data, m_DataLen, m_DataLen + 4);
@@ -22,5 +21,4 @@ namespace pcpp
 
 		return "Packet Trailer, Data: " + trailerStr + ", Length: " + dataLenStream.str() + " [Bytes]";
 	}
-
 }  // namespace pcpp

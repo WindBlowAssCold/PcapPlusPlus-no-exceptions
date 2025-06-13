@@ -7,7 +7,6 @@
 
 namespace pcpp
 {
-
 	DhcpV6OptionType DhcpV6Option::getType() const
 	{
 		if (m_Data == nullptr)
@@ -270,5 +269,4 @@ namespace pcpp
 	{
 		return "DHCPv6 Layer, " + getMessageTypeAsString() + " message";
 	}
-
 }  // namespace pcpp

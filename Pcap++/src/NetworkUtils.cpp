@@ -23,7 +23,6 @@
 
 namespace pcpp
 {
-
 	const int NetworkUtils::DefaultTimeout = 5;
 
 	struct ArpingReceivedData
@@ -423,5 +422,4 @@ namespace pcpp
 
 		return result;
 	}
-
 }  // namespace pcpp

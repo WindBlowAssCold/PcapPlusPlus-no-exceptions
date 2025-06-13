@@ -22,7 +22,6 @@
 
 namespace pcpp
 {
-
 	static timeval timePointToTimeval(const std::chrono::time_point<std::chrono::high_resolution_clock>& in)
 	{
 		auto duration = in.time_since_epoch();
@@ -715,7 +714,6 @@ namespace pcpp
 				// the stop condition is when the list is empty (so closestSequenceFragIndex == -1)
 				foundSomething = true;
 			}
-
 		} while (foundSomething);
 	}
 
@@ -838,5 +836,4 @@ namespace pcpp
 
 		return count;
 	}
-
 }  // namespace pcpp

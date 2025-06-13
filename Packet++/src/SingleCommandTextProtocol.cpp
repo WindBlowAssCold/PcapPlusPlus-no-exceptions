@@ -10,7 +10,6 @@
 
 namespace pcpp
 {
-
 	size_t SingleCommandTextProtocol::getArgumentFieldOffset() const
 	{
 		size_t maxLen;
@@ -174,5 +173,4 @@ namespace pcpp
 		std::string payload = std::string((char*)data, dataSize);
 		return payload.rfind("\r\n") == dataSize - 2;
 	}
-
 }  // namespace pcpp

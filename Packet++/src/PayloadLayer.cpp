@@ -7,7 +7,6 @@
 
 namespace pcpp
 {
-
 	PayloadLayer::PayloadLayer(const uint8_t* data, size_t dataLen) : Layer()
 	{
 		m_Data = new uint8_t[dataLen];
@@ -54,5 +53,4 @@ namespace pcpp
 
 		return "Payload Layer, Data length: " + dataLenStream.str() + " [Bytes]";
 	}
-
 }  // namespace pcpp

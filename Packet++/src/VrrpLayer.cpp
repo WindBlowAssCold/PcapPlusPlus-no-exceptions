@@ -10,7 +10,6 @@
 
 namespace pcpp
 {
-
 #define VRRP_PRIO_STOP 0     ///< priority to stop
 #define VRRP_PRIO_DEF 100    ///< default priority
 #define VRRP_PRIO_OWNER 255  ///< priority of the ip owner
@@ -468,7 +467,8 @@ namespace pcpp
 	{
 		if (maxAdvInt > 0xfff)
 		{
-			throw std::invalid_argument("maxAdvInt must not exceed 12 bits length");
+			return;
+			// throw std::invalid_argument("maxAdvInt must not exceed 12 bits length");
 		}
 		auto rsvdAdv = (vrrpv3_rsvd_adv*)&getVrrpHeader()->authTypeAdvInt;
 		rsvdAdv->maxAdvInt = htobe16(maxAdvInt);

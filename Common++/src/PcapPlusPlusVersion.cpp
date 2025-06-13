@@ -2,7 +2,6 @@
 
 namespace pcpp
 {
-
 	std::string getGitCommit()
 	{
 #ifdef GIT_COMMIT
@@ -23,5 +22,4 @@ namespace pcpp
 	{
 		return "Git branch '" + getGitBranch() + "', commit '" + getGitCommit() + "'";
 	}
-
 }  // namespace pcpp

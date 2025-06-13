@@ -7,7 +7,6 @@
 
 namespace pcpp
 {
-
 	S7CommLayer::S7CommLayer(uint8_t msgType, uint16_t pduRef, uint16_t paramLength, uint16_t dataLength,
 	                         uint8_t errorClass, uint8_t errorCode)
 	{
@@ -152,5 +151,4 @@ namespace pcpp
 		}
 		return sizeof(s7commhdr);
 	}
-
 }  // namespace pcpp

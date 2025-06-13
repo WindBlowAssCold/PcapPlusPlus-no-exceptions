@@ -4,7 +4,6 @@
 
 namespace pcpp
 {
-
 	// ----------------- Class FtpRequestLayer -----------------
 	bool FtpRequestLayer::setCommand(FtpCommand code)
 	{
@@ -387,5 +386,4 @@ namespace pcpp
 	{
 		return "FTP Data";
 	}
-
 }  // namespace pcpp

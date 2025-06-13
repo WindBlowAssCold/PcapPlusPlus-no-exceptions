@@ -11,7 +11,6 @@
 
 namespace pcpp
 {
-
 	namespace
 	{
 		/// Fetches a list of all network devices on a remote machine that WinPcap/NPcap can find.
@@ -30,8 +29,9 @@ namespace pcpp
 			if (pcap_createsrcstr(remoteCaptureString.data(), PCAP_SRC_IFREMOTE, ipAddress.toString().c_str(),
 			                      std::to_string(port).c_str(), nullptr, errorBuf.data()) != 0)
 			{
-				throw std::runtime_error("Error creating the remote connection string. Error: " +
-				                         std::string(errorBuf.begin(), errorBuf.end()));
+				return nullptr;
+				// throw std::runtime_error("Error creating the remote connection string. Error: " +
+				//                          std::string(errorBuf.begin(), errorBuf.end()));
 			}
 
 			PCPP_LOG_DEBUG("Remote capture string: " << remoteCaptureString.data());
@@ -39,8 +39,9 @@ namespace pcpp
 			pcap_if_t* interfaceListRaw;
 			if (pcap_findalldevs_ex(remoteCaptureString.data(), pRmAuth, &interfaceListRaw, errorBuf.data()) < 0)
 			{
-				throw std::runtime_error("Error retrieving device on remote machine. Error: " +
-				                         std::string(errorBuf.begin(), errorBuf.end()));
+				return nullptr;
+				// throw std::runtime_error("Error retrieving device on remote machine. Error: " +
+				//                          std::string(errorBuf.begin(), errorBuf.end()));
 			}
 			return std::unique_ptr<pcap_if_t, internal::PcapFreeAllDevsDeleter>(interfaceListRaw);
 		}
@@ -88,34 +89,34 @@ namespace pcpp
 		}
 
 		std::unique_ptr<pcap_if_t, internal::PcapFreeAllDevsDeleter> interfaceList;
-		try
-		{
-			interfaceList = getAllRemotePcapDevices(ipAddress, port, pRmAuth);
-		}
-		catch (const std::exception& e)
-		{
-			(void)e;  // Suppress the unreferenced local variable warning when PCPP_LOG_ERROR is disabled
-			PCPP_LOG_ERROR(e.what());
-			return nullptr;
-		}
+		// try
+		//{
+		interfaceList = getAllRemotePcapDevices(ipAddress, port, pRmAuth);
+		//}
+		// catch (const std::exception& e)
+		//{
+		//	(void)e;  // Suppress the unreferenced local variable warning when PCPP_LOG_ERROR is disabled
+		//	PCPP_LOG_ERROR(e.what());
+		//	return nullptr;
+		//}
 
 		PointerVector<PcapRemoteDevice> devices;
-		try
+		// try
+		//{
+		for (pcap_if_t* currInterface = interfaceList.get(); currInterface != nullptr;
+		     currInterface = currInterface->next)
 		{
-			for (pcap_if_t* currInterface = interfaceList.get(); currInterface != nullptr;
-			     currInterface = currInterface->next)
-			{
-				auto pNewRemoteDevice = std::unique_ptr<PcapRemoteDevice>(
-				    new PcapRemoteDevice(currInterface, pRemoteAuthCopy, ipAddress, port));
-				devices.pushBack(std::move(pNewRemoteDevice));
-			}
+			auto pNewRemoteDevice = std::unique_ptr<PcapRemoteDevice>(
+			    new PcapRemoteDevice(currInterface, pRemoteAuthCopy, ipAddress, port));
+			devices.pushBack(std::move(pNewRemoteDevice));
 		}
-		catch (const std::exception& e)
-		{
-			(void)e;  // Suppress the unreferenced local variable warning when PCPP_LOG_ERROR is disabled
-			PCPP_LOG_ERROR("Error creating remote devices: " << e.what());
-			return nullptr;
-		}
+		//}
+		// catch (const std::exception& e)
+		//{
+		//	(void)e;  // Suppress the unreferenced local variable warning when PCPP_LOG_ERROR is disabled
+		//	PCPP_LOG_ERROR("Error creating remote devices: " << e.what());
+		//	return nullptr;
+		//}
 
 		return std::unique_ptr<PcapRemoteDeviceList>(
 		    new PcapRemoteDeviceList(ipAddress, port, pRemoteAuthCopy, std::move(devices)));
@@ -130,15 +131,15 @@ namespace pcpp
 	{
 		IPAddress ipAddr;
 
-		try
-		{
-			ipAddr = IPAddress(ipAddrAsString);
-		}
-		catch (std::exception&)
-		{
-			PCPP_LOG_ERROR("IP address no valid: " + ipAddrAsString);
-			return nullptr;
-		}
+		// try
+		//{
+		ipAddr = IPAddress(ipAddrAsString);
+		//}
+		// catch (std::exception&)
+		//{
+		//	PCPP_LOG_ERROR("IP address no valid: " + ipAddrAsString);
+		//	return nullptr;
+		//}
 
 		PcapRemoteDevice* result = getDeviceByIP(ipAddr);
 		return result;

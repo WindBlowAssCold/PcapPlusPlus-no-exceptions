@@ -18,7 +18,9 @@ namespace pcpp
 			int err = pcap_findalldevs(&interfaceListRaw, errbuf.data());
 			if (err < 0)
 			{
-				throw std::runtime_error("Error searching for devices: " + std::string(errbuf.begin(), errbuf.end()));
+				return nullptr;
+				// throw std::runtime_error("Error searching for devices: " + std::string(errbuf.begin(),
+				// errbuf.end()));
 			}
 			// Assigns the raw pointer to the smart pointer with specialized deleter.
 			return std::unique_ptr<pcap_if_t, internal::PcapFreeAllDevsDeleter>(interfaceListRaw);

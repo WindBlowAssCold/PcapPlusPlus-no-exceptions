@@ -6,7 +6,6 @@
 
 namespace pcpp
 {
-
 	// ----------------
 	// SSLLayer methods
 	// ----------------
@@ -249,5 +248,4 @@ namespace pcpp
 	{
 		return getRecordVersion().toString(true) + " Layer, Application Data";
 	}
-
 }  // namespace pcpp

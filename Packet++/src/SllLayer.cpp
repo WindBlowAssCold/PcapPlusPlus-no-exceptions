@@ -13,7 +13,6 @@
 
 namespace pcpp
 {
-
 	SllLayer::SllLayer(uint16_t packetType, uint16_t ARPHRDType)
 	{
 		const size_t headerLen = sizeof(sll_header);
@@ -123,5 +122,4 @@ namespace pcpp
 	{
 		return "Linux cooked header";
 	}
-
 }  // namespace pcpp

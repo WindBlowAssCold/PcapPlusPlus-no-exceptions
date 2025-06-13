@@ -7,7 +7,6 @@
 
 namespace pcpp
 {
-
 	template <typename T> int64_t OUILookup::internalParser(T& jsonData)
 	{
 		// Clear all entries before adding
@@ -119,5 +118,4 @@ namespace pcpp
 
 		return itr->second.vendorName;
 	}
-
 }  // namespace pcpp

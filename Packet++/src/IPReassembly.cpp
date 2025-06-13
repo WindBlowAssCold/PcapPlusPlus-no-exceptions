@@ -9,7 +9,6 @@
 
 namespace pcpp
 {
-
 	uint32_t IPReassemblyHashPacket(IPv4Layer* ipv4Layer)
 	{
 		ScalarBuffer<uint8_t> vec[3];
@@ -699,5 +698,4 @@ namespace pcpp
 
 		return foundLastSegment;
 	}
-
 }  // namespace pcpp

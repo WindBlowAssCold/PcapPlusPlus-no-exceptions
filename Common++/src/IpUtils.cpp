@@ -22,12 +22,14 @@ namespace pcpp
 		{
 			if (sAddr == nullptr)
 			{
-				throw std::invalid_argument("sockaddr is nullptr");
+				return nullptr;
+				// throw std::invalid_argument("sockaddr is nullptr");
 			}
 
 			if (sAddr->sa_family != AF_INET)
 			{
-				throw std::invalid_argument("sockaddr family is not AF_INET.");
+				return nullptr;
+				// throw std::invalid_argument("sockaddr family is not AF_INET.");
 			}
 
 			return &(reinterpret_cast<sockaddr_in*>(sAddr)->sin_addr);
@@ -35,28 +37,30 @@ namespace pcpp
 
 		in_addr* try_sockaddr2in_addr(sockaddr* sAddr)
 		{
-			try
-			{
-				return sockaddr2in_addr(sAddr);
-			}
-			catch (const std::invalid_argument& e)
-			{
-				(void)e;  // Suppress the unreferenced local variable warning when PCPP_LOG_DEBUG is disabled
-				PCPP_LOG_DEBUG("Extraction failed: " << e.what() << " Returning nullptr.");
-				return nullptr;
-			}
+			// try
+			//{
+			return sockaddr2in_addr(sAddr);
+			//}
+			// catch (const std::invalid_argument& e)
+			//{
+			//	(void)e;  // Suppress the unreferenced local variable warning when PCPP_LOG_DEBUG is disabled
+			//	PCPP_LOG_DEBUG("Extraction failed: " << e.what() << " Returning nullptr.");
+			//	return nullptr;
+			//}
 		}
 
 		in6_addr* sockaddr2in6_addr(sockaddr* sAddr)
 		{
 			if (sAddr == nullptr)
 			{
-				throw std::invalid_argument("sockaddr is nullptr");
+				return nullptr;
+				// throw std::invalid_argument("sockaddr is nullptr");
 			}
 
 			if (sAddr->sa_family != AF_INET6)
 			{
-				throw std::invalid_argument("sockaddr family is not AF_INET6.");
+				return nullptr;
+				// throw std::invalid_argument("sockaddr family is not AF_INET6.");
 			}
 
 			return &(reinterpret_cast<sockaddr_in6*>(sAddr)->sin6_addr);
@@ -64,23 +68,24 @@ namespace pcpp
 
 		in6_addr* try_sockaddr2in6_addr(sockaddr* sAddr)
 		{
-			try
-			{
-				return sockaddr2in6_addr(sAddr);
-			}
-			catch (const std::invalid_argument& e)
-			{
-				(void)e;  // Suppress the unreferenced local variable warning when PCPP_LOG_DEBUG is disabled
-				PCPP_LOG_DEBUG("Extraction failed: " << e.what() << " Returning nullptr.");
-				return nullptr;
-			}
+			// try
+			//{
+			return sockaddr2in6_addr(sAddr);
+			//}
+			// catch (const std::invalid_argument& e)
+			//{
+			//	(void)e;  // Suppress the unreferenced local variable warning when PCPP_LOG_DEBUG is disabled
+			//	PCPP_LOG_DEBUG("Extraction failed: " << e.what() << " Returning nullptr.");
+			//	return nullptr;
+			//}
 		}
 
 		void sockaddr2string(const sockaddr* sAddr, char* resultString, size_t resultBufLen)
 		{
 			if (sAddr == nullptr)
 			{
-				throw std::invalid_argument("sockaddr is nullptr");
+				return;
+				// throw std::invalid_argument("sockaddr is nullptr");
 			}
 
 			switch (sAddr->sa_family)
@@ -90,13 +95,15 @@ namespace pcpp
 				PCPP_LOG_DEBUG("IPv4 packet address");
 				if (resultBufLen < INET_ADDRSTRLEN)
 				{
-					throw std::invalid_argument("Insufficient buffer");
+					return;
+					// throw std::invalid_argument("Insufficient buffer");
 				}
 
 				if (inet_ntop(AF_INET, &(reinterpret_cast<const sockaddr_in*>(sAddr)->sin_addr), resultString,
 				              resultBufLen) == nullptr)
 				{
-					throw std::runtime_error("Unknown error during conversion");
+					return;
+					// throw std::runtime_error("Unknown error during conversion");
 				}
 				break;
 			}
@@ -105,18 +112,21 @@ namespace pcpp
 				PCPP_LOG_DEBUG("IPv6 packet address");
 				if (resultBufLen < INET6_ADDRSTRLEN)
 				{
-					throw std::invalid_argument("Insufficient buffer");
+					return;
+					// throw std::invalid_argument("Insufficient buffer");
 				}
 
 				if (inet_ntop(AF_INET6, &(reinterpret_cast<const sockaddr_in6*>(sAddr)->sin6_addr), resultString,
 				              resultBufLen) == nullptr)
 				{
-					throw std::runtime_error("Unknown error during conversion");
+					return;
+					// throw std::runtime_error("Unknown error during conversion");
 				}
 				break;
 			}
 			default:
-				throw std::invalid_argument("Unsupported sockaddr family. Family is not AF_INET or AF_INET6.");
+				return;
+				// throw std::invalid_argument("Unsupported sockaddr family. Family is not AF_INET or AF_INET6.");
 			}
 		}
 

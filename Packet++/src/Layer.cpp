@@ -7,7 +7,6 @@
 
 namespace pcpp
 {
-
 	Layer::~Layer()
 	{
 		if (!isAllocatedToPacket())
@@ -113,5 +112,4 @@ namespace pcpp
 
 		return m_Packet->shortenLayer(this, offsetInLayer, numOfBytesToShorten);
 	}
-
 }  // namespace pcpp

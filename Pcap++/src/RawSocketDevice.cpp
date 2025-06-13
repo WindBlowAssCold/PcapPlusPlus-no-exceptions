@@ -18,7 +18,6 @@
 
 namespace pcpp
 {
-
 #define RAW_SOCKET_BUFFER_LEN 65536
 
 #if defined(_WIN32)
@@ -571,5 +570,4 @@ namespace pcpp
 		return RecvError;
 #endif
 	}
-
 }  // namespace pcpp

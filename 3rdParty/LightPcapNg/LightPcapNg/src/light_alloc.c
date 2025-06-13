@@ -31,22 +31,23 @@
 
 light_option light_alloc_option(uint16_t option_length)
 {
-	struct _light_option *option = calloc(1, sizeof(struct _light_option));
+	struct _light_option* option = calloc(1, sizeof(struct _light_option));
 	uint16_t actual_size = 0;
 
 	option->option_length = option_length;
 
 	PADD32(option_length, &actual_size);
-	if (actual_size != 0) {
+	if (actual_size != 0)
+	{
 		option->data = calloc(1, actual_size);
 	}
 
 	return option;
 }
 
-light_pcapng light_alloc_block(uint32_t block_type, const uint32_t *block_body, uint32_t block_body_length)
+light_pcapng light_alloc_block(uint32_t block_type, const uint32_t* block_body, uint32_t block_body_length)
 {
-	struct _light_pcapng *pcapng_block = calloc(1, sizeof(struct _light_pcapng));
+	struct _light_pcapng* pcapng_block = calloc(1, sizeof(struct _light_pcapng));
 	uint32_t actual_size = 0;
 	int32_t block_body_size;
 
@@ -55,17 +56,19 @@ light_pcapng light_alloc_block(uint32_t block_type, const uint32_t *block_body, 
 	PADD32(block_body_length, &actual_size);
 
 	// ---> PCPP patch
-	// keep the original implementation, since it is not clear why the upstream code was changed, and the original implementation is working fine
-	// check the upstream code for more details: https://github.com/rvelea/LightPcapNg/pull/6
+	// keep the original implementation, since it is not clear why the upstream code was changed, and the original
+	// implementation is working fine check the upstream code for more details:
+	// https://github.com/rvelea/LightPcapNg/pull/6
 
-	// pcapng_block->block_total_length = actual_size + 2 * sizeof(pcapng_block->block_total_length) + sizeof(pcapng_block->block_type); // This value MUST be a multiple of 4.
-	// block_body_size = actual_size;
+	// pcapng_block->block_total_length = actual_size + 2 * sizeof(pcapng_block->block_total_length) +
+	// sizeof(pcapng_block->block_type); // This value MUST be a multiple of 4. block_body_size = actual_size;
 
-	pcapng_block->block_total_length = actual_size; // This value MUST be a multiple of 4.
+	pcapng_block->block_total_length = actual_size;  // This value MUST be a multiple of 4.
 	block_body_size = actual_size - 2 * sizeof(pcapng_block->block_total_length) - sizeof(pcapng_block->block_type);
 	// <--- end of PCPP patch
 
-	if (block_body_size > 0) {
+	if (block_body_size > 0)
+	{
 		pcapng_block->block_body = calloc(1, block_body_size);
 		memcpy(pcapng_block->block_body, block_body, block_body_size);
 	}

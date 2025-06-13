@@ -70,5 +70,4 @@ namespace pcpp
 		else
 			m_NextLayer = new PayloadLayer(payload, payloadLen, this, m_Packet);
 	}
-
 }  // namespace pcpp

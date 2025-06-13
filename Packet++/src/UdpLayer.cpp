@@ -22,7 +22,6 @@
 
 namespace pcpp
 {
-
 	UdpLayer::UdpLayer(uint16_t portSrc, uint16_t portDst)
 	{
 		const size_t headerLen = sizeof(udphdr);
@@ -164,5 +163,4 @@ namespace pcpp
 
 		return "UDP Layer, Src port: " + srcPortStream.str() + ", Dst port: " + dstPortStream.str();
 	}
-
 }  // namespace pcpp

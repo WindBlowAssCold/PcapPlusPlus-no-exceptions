@@ -26,16 +26,19 @@
 
 #include <stdlib.h>
 
-int light_section_feature_extraction(const light_pcapng section, int (*extractor)(const light_pcapng, void *, size_t),
-		void **feature_vector, const size_t feature_vector_size, const light_feature_t type)
+int light_section_feature_extraction(const light_pcapng section, int (*extractor)(const light_pcapng, void*, size_t),
+                                     void** feature_vector, const size_t feature_vector_size,
+                                     const light_feature_t type)
 {
 	light_pcapng iterator;
 
-	if (__is_section_header(section) != LIGHT_TRUE) {
+	if (__is_section_header(section) != LIGHT_TRUE)
+	{
 		return LIGHT_INVALID_SECTION;
 	}
 
-	switch(type) {
+	switch (type)
+	{
 	case LIGHT_FEATURE_BITMASK:
 		*feature_vector = calloc(1, sizeof(uint64_t));
 		break;
@@ -53,13 +56,15 @@ int light_section_feature_extraction(const light_pcapng section, int (*extractor
 		break;
 	}
 
-	if (*feature_vector == NULL) {
+	if (*feature_vector == NULL)
+	{
 		return LIGHT_OUT_OF_MEMORY;
 	}
 
 	extractor(section, *feature_vector, feature_vector_size);
 	iterator = section->next_block;
-	while (iterator != NULL && __is_section_header(iterator) != LIGHT_TRUE) {
+	while (iterator != NULL && __is_section_header(iterator) != LIGHT_TRUE)
+	{
 		extractor(iterator, *feature_vector, feature_vector_size);
 		iterator = iterator->next_block;
 	}

@@ -25,7 +25,6 @@
 
 namespace pcpp
 {
-
 #define TCPOPT_DUMMY 0xff
 
 	/// ~~~~~~~~~~~~~~~~
@@ -568,5 +567,4 @@ namespace pcpp
 		return true;
 	}
 	DISABLE_WARNING_POP
-
 }  // namespace pcpp

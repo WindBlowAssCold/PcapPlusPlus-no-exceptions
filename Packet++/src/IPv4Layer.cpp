@@ -17,7 +17,6 @@
 
 namespace pcpp
 {
-
 #define IPV4OPT_DUMMY 0xff
 #define IPV4_MAX_OPT_SIZE 40
 
@@ -619,5 +618,4 @@ namespace pcpp
 		m_OptionReader.changeTLVRecordCount(0 - getOptionCount());
 		return true;
 	}
-
 }  // namespace pcpp

@@ -9,7 +9,6 @@
 
 namespace pcpp
 {
-
 	size_t IDnsResourceData::decodeName(const char* encodedName, char* result, IDnsResource* dnsResource) const
 	{
 		if (dnsResource == nullptr)
@@ -212,5 +211,4 @@ namespace pcpp
 		memcpy(arr, m_Data, m_DataLen);
 		return true;
 	}
-
 }  // namespace pcpp

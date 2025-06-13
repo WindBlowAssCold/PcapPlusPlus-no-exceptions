@@ -15,7 +15,6 @@
 
 namespace pcpp
 {
-
 	void IPv6Layer::initLayer()
 	{
 		m_DataLen = sizeof(ip6_hdr);
@@ -134,7 +133,8 @@ namespace pcpp
 			{
 				if (curExt == nullptr)
 				{
-					throw std::logic_error("curExt is nullptr");
+					return;
+					// throw std::logic_error("curExt is nullptr");
 				}
 				curExt->setNextHeader(newExt);
 				curExt = curExt->getNextHeader();
@@ -368,5 +368,4 @@ namespace pcpp
 
 		return result;
 	}
-
 }  // namespace pcpp
